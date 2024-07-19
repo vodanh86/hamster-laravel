@@ -21,6 +21,7 @@ class UserController extends Controller
                 $user = User::where("telegram_id", $tele_user["id"])->first();
                 if ($user) {
                     $user->last_login = Carbon::now();
+                    $user->update();
                 } else {
                     $user = new User();
                     $user->telegram_id = $tele_user["id"];
@@ -28,8 +29,8 @@ class UserController extends Controller
                     $user->last_name = $tele_user["last_name"];
                     $user->username = $tele_user["username"];
                     $user->language_code = $tele_user["language_code"];
+                    $user->save();
                 }
-                $user->save();
             }
         }
     }
