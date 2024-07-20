@@ -45,4 +45,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Membership::class, 'membership_id');
     }
+
+    public function skin()
+    {
+        return $this->belongsTo(Skin::class, 'skin_id');
+    }
 }

@@ -33,6 +33,7 @@ class UserController extends AdminController
         $grid->column('username', __('Username'));
         $grid->column('language_code', __('Language code'));
         $grid->column('membership.name', __('Membership'));
+        $grid->column('skin.image', __('Skin'))->image();
         $grid->column('last_login', __('Last login'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));

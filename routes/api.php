@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\SkinController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,3 +23,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('users/check', [UserController::class, 'index']);
 Route::get('memberships', [MembershipController::class, 'index']);
+Route::get('skins', [SkinController::class, 'index']);
