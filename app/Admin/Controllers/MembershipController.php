@@ -70,7 +70,7 @@ class MembershipController extends AdminController
         $form = new Form(new Membership());
 
         $form->text('name', __('Name'));
-        $form->image('image', __('Image'))->move("membership");
+        $form->image('image', __('Image'))->move("images/membership");
         $form->number('money', __('Money'));
         $form->text('short_money', __('Short money'));
         $form->number('order', __('Order'));
