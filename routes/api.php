@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\SkinController;
 use App\Http\Controllers\ExchangeController;
+use App\Http\Controllers\ProfitPerHourController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,3 +27,4 @@ Route::post('users/check', [UserController::class, 'index']);
 Route::get('memberships', [MembershipController::class, 'index']);
 Route::get('skins', [SkinController::class, 'index']);
 Route::get('exchanges', [ExchangeController::class, 'index']);
+Route::get('profit-per-hours', [ProfitPerHourController::class, 'index']);
