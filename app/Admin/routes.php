@@ -15,4 +15,5 @@ Route::group([
     $router->resource('users', UserController::class);
     $router->resource('memberships', MembershipController::class);
     $router->resource('skins', SkinController::class);
+    $router->resource('exchanges', ExchangeController::class);
 });
