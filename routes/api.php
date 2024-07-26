@@ -24,6 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('users/check', [UserController::class, 'index']);
+Route::post('users/login', [UserController::class, 'store']);
 Route::get('memberships', [MembershipController::class, 'index']);
 Route::get('skins', [SkinController::class, 'index']);
 Route::get('exchanges', [ExchangeController::class, 'index']);
