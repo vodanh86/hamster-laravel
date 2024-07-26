@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    //
+    //Khi bat app, check user ton tai chua, neu chua se tu tao
     public function index(Request $request)
     {
         $tg_data = $request->post("tg_data");

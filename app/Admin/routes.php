@@ -17,4 +17,7 @@ Route::group([
     $router->resource('skins', SkinController::class);
     $router->resource('exchanges', ExchangeController::class);
     $router->resource('profit-per-hours', ProfitPerHourController::class);
+    $router->resource('category', CategoryController::class);
+    $router->resource('card',CardController::class);
+    $router->resource('card-profit',CardProfitController::class);
 });
