@@ -18,4 +18,14 @@ class UserValidator
 
         return Validator::make($requestData, $commonRules);
     }
+
+    public function validateUpdateRevenue($requestData): \Illuminate\Contracts\Validation\Validator
+    {
+        $commonRules = [
+            'user_id' => 'required|integer|exists:users,id',
+            'amount' => 'required|integer',
+        ];
+
+        return Validator::make($requestData, $commonRules);
+    }
 }

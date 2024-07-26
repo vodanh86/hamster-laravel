@@ -6,6 +6,7 @@ use App\Http\Validators\UserValidator;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -85,6 +86,52 @@ class UserController extends Controller
             }
 
             return $this->_formatBaseResponse(201, $user, 'Success');
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->toArray();
+            return $this->_formatBaseResponse(400, $errors, 'Failed');
+        }
+    }
+
+    public function userInfor($id): ?array
+    {
+        try {
+            $user = User::findOrFail($id);
+            return $this->_formatBaseResponse('200', $user, 'Success');
+        } catch (ModelNotFoundException $e) {
+            return $this->_formatBaseResponse('404', ['error' => 'User not found'], 'Failed');
+        }
+    }
+
+    public function updateRevenue(Request $request): ?array
+    {
+        try {
+            $dataInput = $request->all();
+
+            $validator = $this->userValidator->validateUpdateRevenue($dataInput);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            $user_id = $dataInput['user_id'];
+            $amount = $dataInput['amount'];
+            $user = User::findOrFail($user_id);
+            if ($user) {
+                //get current value
+                $currentRevenue = (int)$user->revenue;
+                $user->revenue = $currentRevenue + $amount;
+
+                $user->update();
+
+                $result = [
+                    'user_id' => $user_id,
+                    'revenue' => $user->revenue
+                ];
+
+                return $this->_formatBaseResponse(200, $result, 'Success');
+            } else {
+                return $this->_formatBaseResponse(400, null, 'Failed');
+            }
+
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');

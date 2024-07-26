@@ -31,7 +31,7 @@ class MembershipController extends AdminController
         $grid->column('image', __('Image'))->image();
         $grid->column('money', __('Money'));
         $grid->column('short_money', __('Short money'));
-        $grid->column('order', __('Order'));
+        $grid->column('level', __('Level'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -53,7 +53,7 @@ class MembershipController extends AdminController
         $show->image('image', __('Image'));
         $show->field('money', __('Money'));
         $show->field('short_money', __('Short money'));
-        $show->field('order', __('Order'));
+        $show->field('level', __('Level'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -73,7 +73,7 @@ class MembershipController extends AdminController
         $form->image('image', __('Image'))->move("images/membership");
         $form->number('money', __('Money'));
         $form->text('short_money', __('Short money'));
-        $form->number('order', __('Order'));
+        $form->number('level', __('Level'));
 
         return $form;
     }
