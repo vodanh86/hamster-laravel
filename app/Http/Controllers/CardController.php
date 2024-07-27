@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\CardValidator;
 use App\Models\Card;
 use App\Models\Category;
@@ -50,11 +51,16 @@ class CardController extends Controller
 
             $cards->each(function ($card) {
                 if ($card->cardProfits->isNotEmpty()) {
-                    $card->card_profits = [$card->cardProfits->sortBy('level')->first()];
+                    $card->card_profits = $card->cardProfits->sortBy('level')->take(1)->map(function ($cardProfit) {
+                        $requiredCardId = $cardProfit->required_card;
+                        $combinedCard = (new UtilsQueryHelper())::getCombinedCardbyId($requiredCardId);
+                        $cardProfit->required_card_text = $combinedCard;
+                        return $cardProfit;
+                    });
                 } else {
-                    $card->card_profits = [];
+                    $card->card_profits = collect();
                 }
-                unset($card->cardProfits); // Bỏ quan hệ gốc để chỉ giữ lại phần tử đã lọc
+                unset($card->cardProfits);
             });
 
             return $this->_formatBaseResponse(200, $cards, 'Success');
