@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,3 +40,5 @@ Route::get('profit-per-hours', [ProfitPerHourController::class, 'index']);
 Route::post('profit-per-hours/get-by-user-and-exchange', [ProfitPerHourController::class, 'getByUserAndExchange']);
 //category
 Route::get('category/all', [CategoryController::class, 'index']);
+//card
+Route::post('card/get-by-category', [CardController::class, 'getByCategory']);

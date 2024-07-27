@@ -32,7 +32,7 @@ class UtilsQueryHelper
         $data= CardProfit::with('card')->get()
             ->map(function ($cardProfit) {
                 error_log($cardProfit);
-                $display_name = $cardProfit->card->name . ' - evel ' . $cardProfit->level;
+                $display_name = $cardProfit->card->name . ' - Level ' . $cardProfit->level;
 
                 return [
                     'id' => $cardProfit->id,
