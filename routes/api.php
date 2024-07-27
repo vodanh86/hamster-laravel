@@ -28,8 +28,10 @@ Route::post('users/check', [UserController::class, 'index']);
 Route::post('users/login', [UserController::class, 'store']);
 Route::get('users/infor/{id}', [UserController::class, 'userInfor']);
 Route::post('users/update-revenue', [UserController::class, 'updateRevenue']);
-
+//memebership
 Route::get('memberships/all', [MembershipController::class, 'index']);
+Route::post('memberships/get-by-user', [MembershipController::class, 'getByUser']);
+//skins
 Route::get('skins', [SkinController::class, 'index']);
 Route::get('exchanges', [ExchangeController::class, 'index']);
 //profit per hour
