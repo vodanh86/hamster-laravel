@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\UserCardValidator;
-use App\Models\Category;
 use App\Models\UserCard;
 use App\Traits\ResponseFormattingTrait;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class UserCardController extends Controller
@@ -58,6 +56,47 @@ class UserCardController extends Controller
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');
         }
+    }
+
+    public function getCardsByUserIdAndCategoryId(Request  $request): array
+    {
+
+        try{
+            $dataInput = $request->all();
+
+            $validator = $this->userCardValidator->validateGetByUserAndCategoryAndExchange($dataInput);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            $userId = $dataInput["user_id"];
+            $exchangeId = $dataInput["exchange_id"];
+            $categoryId = $dataInput["category_id"];
+
+            $subQuery = DB::table('user_card as uc')
+                ->select('uc.card_id', DB::raw('MAX(uc.level) as max_level'))
+                ->where('uc.user_id', $userId)
+                ->groupBy('uc.card_id');
+
+            $userCards = UserCard::join('card', 'user_card.card_id', '=', 'card.id')
+                ->join('card_profit', 'user_card.card_profit_id', '=', 'card_profit.id')
+                ->joinSub($subQuery, 'max_levels', function ($join) {
+                    $join->on('user_card.card_id', '=', 'max_levels.card_id')
+                        ->on('user_card.level', '=', 'max_levels.max_level');
+                })
+                ->where('user_card.user_id', $userId)
+                ->where('user_card.exchange_id', $exchangeId)
+                ->where('card.category_id', $categoryId)
+                ->with(['card', 'cardProfit', 'exchange'])
+                ->orderBy('card.order', 'asc')
+                ->get();
+
+            return $this->_formatBaseResponse(200, $userCards, 'Success');
+        }catch (ValidationException $e) {
+            $errors = $e->validator->errors()->toArray();
+            return $this->_formatBaseResponse(400, $errors, 'Failed');
+        }
+
     }
 
 }

@@ -51,6 +51,7 @@ Route::get('category/all', [CategoryController::class, 'index']);
 
 //user-card
 Route::post('user-card/buy', [UserCardController::class, 'store']);
+Route::post('user-card/get-by-user-and-exchange-and-category', [UserCardController::class, 'getCardsByUserIdAndCategoryId']);
 
 //card
 Route::post('card/get-by-category', [CardController::class, 'getByCategory']);
