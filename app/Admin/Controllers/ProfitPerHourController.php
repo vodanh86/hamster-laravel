@@ -32,6 +32,7 @@ class ProfitPerHourController extends AdminController
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
         $grid->column('exchange_id', __('Exchange id'));
+        $grid->column('is_active', __('IsActive'));
 
         return $grid;
     }
@@ -52,6 +53,7 @@ class ProfitPerHourController extends AdminController
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
         $show->field('exchange_id', __('Exchange id'));
+        $show->field('is_active', __('IsActive'));
 
         return $show;
     }

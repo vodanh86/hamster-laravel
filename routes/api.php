@@ -29,16 +29,24 @@ Route::post('users/check', [UserController::class, 'index']);
 Route::post('users/login', [UserController::class, 'store']);
 Route::get('users/infor/{id}', [UserController::class, 'userInfor']);
 Route::post('users/update-revenue', [UserController::class, 'updateRevenue']);
+
 //memebership
 Route::get('memberships/all', [MembershipController::class, 'index']);
 Route::post('memberships/get-by-user', [MembershipController::class, 'getByUser']);
+
 //skins
 Route::get('skins', [SkinController::class, 'index']);
-Route::get('exchanges', [ExchangeController::class, 'index']);
+
 //profit per hour
 Route::get('profit-per-hours', [ProfitPerHourController::class, 'index']);
 Route::post('profit-per-hours/get-by-user-and-exchange', [ProfitPerHourController::class, 'getByUserAndExchange']);
+
+//exchange
+Route::get('exchanges', [ExchangeController::class, 'index']);
+Route::post('exchanges/get-by-user', [ExchangeController::class, 'getByUser']);
+
 //category
 Route::get('category/all', [CategoryController::class, 'index']);
+
 //card
 Route::post('card/get-by-category', [CardController::class, 'getByCategory']);

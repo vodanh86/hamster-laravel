@@ -5,6 +5,8 @@ namespace App\Admin\Controllers;
 use App\Models\Card;
 use App\Models\CardProfit;
 use App\Models\Category;
+use App\Models\Exchange;
+use App\Models\ProfitPerHour;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -29,7 +31,7 @@ class UtilsQueryHelper
 
     public static function getCombinedCard(): Collection
     {
-        $data= CardProfit::with('card')->get()
+        $data = CardProfit::with('card')->get()
             ->map(function ($cardProfit) {
                 error_log($cardProfit);
                 $display_name = $cardProfit->card->name . ' - Level ' . $cardProfit->level;
@@ -52,6 +54,19 @@ class UtilsQueryHelper
         }
 
         return 'Không có';
+    }
+
+    public static function getFirstExchange(): ?Exchange
+    {
+        return Exchange::all()
+            ->first();
+    }
+
+    public static function getActiveExchangeByUser($userId): ?ProfitPerHour
+    {
+        return ProfitPerHour::all()->where('user_id', $userId)
+            ->where('is_active', '=', 1)
+            ->first();
     }
 
 

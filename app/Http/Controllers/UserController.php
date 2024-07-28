@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\UserValidator;
+use App\Models\ProfitPerHour;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
 use App\Models\User;
@@ -69,6 +71,8 @@ class UserController extends Controller
                 $user->last_login = Carbon::now();
                 $user->is_first_login = 0;
                 $user->update();
+                $profitPerHour = (new UtilsQueryHelper())::getActiveExchangeByUser($user->id);
+                $user->profitPerHour = $profitPerHour;
             } else {
                 $user = new User();
                 $user->telegram_id = $telegram_id;
@@ -83,6 +87,18 @@ class UserController extends Controller
                 $user->is_first_login = 1;
                 $user->created_at = now()->toDateTime();
                 $user->save();
+
+                //save exchangeId  into ProfitPerHour
+                $userId = $user->id;
+                $exchangeId = (new UtilsQueryHelper())::getFirstExchange();
+                $profitPerHour = new ProfitPerHour();
+                $profitPerHour->user_id = $userId;
+                $profitPerHour->exchange_id = $exchangeId;
+                $profitPerHour->profit_per_hour = 0;
+                $profitPerHour->is_active = 1;
+                $profitPerHour->save();
+
+                $user->profitPerHour = $profitPerHour;
             }
 
             return $this->_formatBaseResponse(201, $user, 'Success');
