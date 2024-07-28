@@ -69,5 +69,12 @@ class UtilsQueryHelper
             ->first();
     }
 
+    public static function findCardProfitById($id): ?CardProfit
+    {
+        return CardProfit::all()
+            ->where('id', $id)
+            ->first();
+    }
+
 
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserCardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,9 @@ Route::post('exchanges/get-by-user', [ExchangeController::class, 'getByUser']);
 
 //category
 Route::get('category/all', [CategoryController::class, 'index']);
+
+//user-card
+Route::post('user-card/buy', [UserCardController::class, 'store']);
 
 //card
 Route::post('card/get-by-category', [CardController::class, 'getByCategory']);

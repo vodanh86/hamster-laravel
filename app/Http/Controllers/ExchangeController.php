@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Validators\ExchangeValidator;
-use App\Http\Validators\ProfitPerHourValidator;
 use App\Models\Exchange;
-use App\Models\User;
-use App\Traits\ResponseFormattingTrait;
-use Carbon\Carbon;
 use App\Models\ProfitPerHour;
+use App\Traits\ResponseFormattingTrait;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
