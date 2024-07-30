@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\ConstantHelper;
 use App\Http\Validators\ExchangeValidator;
 use App\Models\Exchange;
 use App\Models\ProfitPerHour;
 use App\Traits\ResponseFormattingTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ExchangeController extends Controller
@@ -39,11 +41,15 @@ class ExchangeController extends Controller
             }
 
             $userId = $dataInput['user_id'];
-            $exchange = ProfitPerHour::all()->where('user_id', $userId)
-                ->where('is_active', '=', 1)
-                ->first();
 
-            return $this->_formatBaseResponse(200, $exchange, 'Success');
+            $result= DB::table('profit_per_hours as pp')
+                ->select('pp.id' , 'pp.user_id', 'pp.profit_per_hour','pp.exchange_id','is_active','ex.name','ex.description','ex.image')
+                ->join('exchanges as ex', 'ex.id', '=', 'pp.exchange_id')
+                ->where('pp.is_active', '=', ConstantHelper::STATUS_ACTIVE)
+                ->where('pp.user_id', '=', $userId)
+                ->get();
+
+            return $this->_formatBaseResponse(200, $result, 'Success');
 
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
