@@ -134,7 +134,13 @@ class UserController extends Controller
             if ($user) {
                 //get current value
                 $currentRevenue = (int)$user->revenue;
-                $user->revenue = $currentRevenue + $amount;
+                $currentHighestScore = $user->highest_score;
+                $newRevenue = $currentRevenue + $amount;
+                //check if current revenue > highest score
+                if ($currentRevenue > $currentHighestScore) {
+                    $user->highest_score =$currentRevenue;
+                }
+                $user->revenue = $newRevenue;
 
                 $user->update();
 
@@ -142,6 +148,7 @@ class UserController extends Controller
                     'user_id' => $user_id,
                     'revenue' => $user->revenue
                 ];
+
 
                 return $this->_formatBaseResponse(200, $result, 'Success');
             } else {

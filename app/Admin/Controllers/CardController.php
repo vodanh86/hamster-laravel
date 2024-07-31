@@ -76,7 +76,7 @@ class CardController extends AdminController
         $form = new Form(new Card());
 
         if ($form->isEditing()) {
-            $id = request()->route()->parameter('category');
+            $id = request()->route()->parameter('card');
             $parentId = $form->model()->find($id)->getOriginal("category_id");
 
             $form->select('category_id', __('Category'))->options($categoryOptions)->default($parentId);
