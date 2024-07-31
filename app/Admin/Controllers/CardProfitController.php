@@ -78,8 +78,6 @@ class CardProfitController extends AdminController
     protected function form()
     {
         $cardProfitOptions = (new UtilsQueryHelper())::getCombinedCard();
-        error_log("cardProfitOptions");
-        error_log(json_encode($cardProfitOptions));
         $cardProfitOptions->prepend('Không có', 0);
         $cardProfitDefault = $cardProfitOptions->keys()->first();
 

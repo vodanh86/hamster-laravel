@@ -91,14 +91,23 @@ class UserController extends Controller
                 //save exchangeId  into ProfitPerHour
                 $userId = $user->id;
                 $exchangeId = (new UtilsQueryHelper())::getFirstExchange();
-                $profitPerHour = new ProfitPerHour();
-                $profitPerHour->user_id = $userId;
-                $profitPerHour->exchange_id = $exchangeId;
-                $profitPerHour->profit_per_hour = 0;
-                $profitPerHour->is_active = 1;
-                $profitPerHour->save();
+                $exchanges = (new UtilsQueryHelper())::getAllExchanges();
+                $flagActive = true;
+                for ($i = 0, $iMax = count($exchanges); $i < $iMax; $i++) {
+                    $profitPerHour = new ProfitPerHour();
+                    $profitPerHour->user_id = $userId;
+                    $profitPerHour->exchange_id = $exchanges[$i]->id;
+                    $profitPerHour->profit_per_hour = 0;
+                    if ($flagActive) {
+                        $profitPerHour->is_active = 1;
+                        $flagActive = false;
+                    } else {
+                        $profitPerHour->is_active = 0;
+                    }
+                    $profitPerHour->save();
+                }
 
-                $user->profitPerHour = $profitPerHour;
+                $user->profitPerHour = (new UtilsQueryHelper())::getProfitPerHourByUser($userId);
             }
 
             return $this->_formatBaseResponse(201, $user, 'Success');
@@ -138,7 +147,7 @@ class UserController extends Controller
                 $newRevenue = $currentRevenue + $amount;
                 //check if current revenue > highest score
                 if ($currentRevenue > $currentHighestScore) {
-                    $user->highest_score =$currentRevenue;
+                    $user->highest_score = $currentRevenue;
                 }
                 $user->revenue = $newRevenue;
 

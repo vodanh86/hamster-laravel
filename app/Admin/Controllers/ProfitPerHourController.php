@@ -70,6 +70,7 @@ class ProfitPerHourController extends AdminController
         $form->number('user_id', __('User id'));
         $form->number('profit_per_hour', __('Profit per hour'))->default(1500);
         $form->number('exchange_id', __('Exchange id'));
+        $form->radio('is_active', __('Is Active'))->options([1 => 'Active', 0=> 'Deactive'])->default(1);
 
         return $form;
     }

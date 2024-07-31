@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\UserCardValidator;
+use App\Models\User;
 use App\Models\UserCard;
 use App\Traits\ResponseFormattingTrait;
 use Illuminate\Http\Request;
@@ -38,18 +40,60 @@ class UserCardController extends Controller
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
+            $cardId = $dataInput["card_id"];
+            $cardProfitId = $dataInput["card_profit_id"];
+            $cardlevel = $dataInput["level"];
+            $userId = $dataInput["user_id"];;
+            $exchangeId = $dataInput["exchange_id"];
+
+            //lay thong tin user_card hien tai
+            //TODO: lay profit cua card hien tai - profit cua card hien tại , sau do cong vao profitPerHour, update revenue
+            $currentCardProfit = (new UtilsQueryHelper())::findPrevCardProfitByCardAndCardProfit($cardId, $cardProfitId);
+            $currentProfit = $currentCardProfit->profit;
+//            error_log('$currentProfit: ' . $currentProfit);
+
+            //next level
+            $nextCardProfit = (new UtilsQueryHelper())::findCardProfitByCardAndLevel($cardId, $cardlevel);
+            $nextProfit = $nextCardProfit->profit;
+//            error_log('$nextProfit: ' . $nextProfit);
+            $increaseProfit = $nextProfit - $currentProfit;
+//            error_log('$increaseProfit: ' . $increaseProfit);
 
             $userCard = new UserCard();
-            $userCard->user_id = $dataInput["user_id"];
-            $userCard->card_id = $dataInput["card_id"];
-            $userCard->level = $dataInput["level"];
-            $userCard->card_profit_id = $dataInput["card_profit_id"];
-            $userCard->exchange_id = $dataInput["exchange_id"];
-
-            //level
-//            $cardProfit = (new UtilsQueryHelper())::findCardProfitById($userCard->car_profit_id);
+            $userCard->user_id = $userId;
+            $userCard->card_id = $cardId;
+            $userCard->level = $cardlevel;
+            $userCard->card_profit_id = $cardProfitId;
+            $userCard->exchange_id = $exchangeId;
+//
+//            //level
             $userCard->created_at = now()->toDateTime();
             $userCard->save();
+
+            //update profit per hour
+            $profitPerHour = (new UtilsQueryHelper())::findProfitPerHourByUserAndExchange($userId, $exchangeId);
+            $currentProfitPerHour=$profitPerHour->profit_per_hour;
+//            error_log('$currentProfitPerHour: ' . $currentProfitPerHour);
+            $nextProfitPerHour=$currentProfitPerHour + $increaseProfit;
+//            error_log('$nextProfitPerHour: ' . $nextProfitPerHour);
+            $profitPerHour->profit_per_hour=$nextProfitPerHour;
+            $profitPerHour->update();
+
+
+            //update revenue
+            $user = User::findOrFail($userId);
+            if ($user) {
+                //get current value
+                $currentRevenue = (int)$user->revenue;
+//                error_log('$currentRevenue: ' . $currentRevenue);
+                $newRevenue = $currentRevenue - $increaseProfit;
+//                error_log('$newRevenue: ' . $newRevenue);
+                $user->revenue = $newRevenue;
+
+                $user->update();
+            }
+
+            //TODO: Them bang lich su trao doi
 
             return $this->_formatBaseResponse(201, $userCard, 'Success');
         } catch (ValidationException $e) {
@@ -58,10 +102,10 @@ class UserCardController extends Controller
         }
     }
 
-    public function getCardsByUserIdAndCategoryId(Request  $request): array
+    public function getCardsByUserIdAndCategoryId(Request $request): array
     {
 
-        try{
+        try {
             $dataInput = $request->all();
 
             $validator = $this->userCardValidator->validateGetByUserAndCategoryAndExchange($dataInput);
@@ -92,7 +136,7 @@ class UserCardController extends Controller
                 ->get();
 
             return $this->_formatBaseResponse(200, $userCards, 'Success');
-        }catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');
         }
