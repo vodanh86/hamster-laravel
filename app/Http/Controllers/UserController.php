@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\UserValidator;
+use App\Models\Membership;
 use App\Models\ProfitPerHour;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
@@ -148,6 +149,7 @@ class UserController extends Controller
                 //check if current revenue > highest score
                 if ($currentRevenue > $currentHighestScore) {
                     $user->highest_score = $currentRevenue;
+                    $currentHighestScore = $currentRevenue;
                 }
                 $user->revenue = $newRevenue;
 
@@ -160,8 +162,13 @@ class UserController extends Controller
 
                 //update membership
                 //TODO: check xem next membership
-
-
+                $membership = Membership::findOrFail($user->membership_id);
+                $nextMembership = (new UtilsQueryHelper())::findNextMemebership($membership->level);
+                $nextMembershipMoney = $nextMembership->money;
+                if ($currentHighestScore >= $nextMembershipMoney) {
+                    $user->membership_id = $nextMembership->id;
+                    $user->update();
+                }
 
                 return $this->_formatBaseResponse(200, $result, 'Success');
             } else {

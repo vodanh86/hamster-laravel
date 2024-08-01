@@ -120,10 +120,9 @@ class UtilsQueryHelper
             ->first();
     }
 
-    public static function findNextMemebership($currentLevel, $membershipId){
-        return Membership::all()
-            ->where('level','>',$currentLevel)
-            ->sort('level', 'asc')
+    public static function findNextMemebership($currentLevel){
+        return Membership::where('level', '>', $currentLevel)
+            ->orderBy('level', 'asc')
             ->first();
     }
 
