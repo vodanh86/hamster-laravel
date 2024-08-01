@@ -102,10 +102,11 @@ class UserCardController extends Controller
                 $user->update();
             }
 
-            //trả them next_level
+
+            $categoryList = (new UtilsQueryHelper())::listCardByUserAndExchange($userId, $exchangeId);
             //TODO: Them bang lich su trao doi
 
-            return $this->_formatBaseResponse(201, $userCard, 'Success');
+            return $this->_formatBaseResponse(201, $categoryList, 'Success');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');
