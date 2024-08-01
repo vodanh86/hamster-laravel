@@ -27,7 +27,8 @@ class ExchangeController extends Controller
 
     public function index(Request $request)
     {
-        return Exchange::all();
+        $result=Exchange::all();
+        return $this->_formatBaseResponse(200, $result, 'Success');
     }
 
     public function getByUser(Request $request): array
