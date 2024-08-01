@@ -102,6 +102,7 @@ class UserCardController extends Controller
                 $user->update();
             }
 
+            //trả them next_level
             //TODO: Them bang lich su trao doi
 
             return $this->_formatBaseResponse(201, $userCard, 'Success');

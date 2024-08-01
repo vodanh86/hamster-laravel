@@ -56,4 +56,5 @@ Route::post('user-card/get-by-user-and-exchange-and-category', [UserCardControll
 
 //card
 Route::post('card/get-by-category', [CardController::class, 'getByCategory']);
-Route::get('card/get-all', [CardController::class, 'getAllWithCategory']);
+Route::post('card/get-all', [CardController::class, 'getAllWithCategory']);
+Route::get('card/test', [CardController::class, 'getCardsByUserIdAndCategoryId']);
