@@ -70,4 +70,43 @@ class CardController extends Controller
         }
     }
 
+    public function getAllWithCategory(): array
+    {
+        try {
+            $categoryList = Category::all();
+
+            $cardList = Card::with(['cardProfits' => function ($query) {
+                $query->orderBy('level', 'asc');
+            }])->get();
+
+            foreach ($categoryList as $category) {
+                $categoryCards = $cardList->where('category_id', $category->id)->values();
+                foreach ($categoryCards as $card) {
+                    $cardProfits = $card->cardProfits;
+                    foreach ($cardProfits as $index => $cardProfit) {
+                        $cardProfitArray = $cardProfit->toArray();
+                        if ($index < $cardProfits->count() - 1) {
+                            $nextLevelProfit = $cardProfits[$index + 1];
+                            if ($nextLevelProfit->level == $cardProfit->level + 1) {
+                                $cardProfitArray['next_level'] = $nextLevelProfit->toArray();
+                                unset($cardProfitArray['next_level']['next_level']); // Remove the recursive next_level
+                            } else {
+                                $cardProfitArray['next_level'] = null;
+                            }
+                        } else {
+                            $cardProfitArray['next_level'] = null; // No next level
+                        }
+                        $cardProfits[$index] = $cardProfitArray;
+                    }
+                }
+                $category->cardList = $categoryCards;
+            }
+
+            return $this->_formatBaseResponse(200, $categoryList, 'Success');
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->toArray();
+            return $this->_formatBaseResponse(400, $errors, 'Failed');
+        }
+    }
+
 }

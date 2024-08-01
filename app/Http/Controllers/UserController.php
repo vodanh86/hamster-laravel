@@ -158,6 +158,10 @@ class UserController extends Controller
                     'revenue' => $user->revenue
                 ];
 
+                //update membership
+                //TODO: check xem next membership
+
+
 
                 return $this->_formatBaseResponse(200, $result, 'Success');
             } else {

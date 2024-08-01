@@ -6,6 +6,7 @@ use App\Models\Card;
 use App\Models\CardProfit;
 use App\Models\Category;
 use App\Models\Exchange;
+use App\Models\Membership;
 use App\Models\ProfitPerHour;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -117,6 +118,15 @@ class UtilsQueryHelper
             ->where('exchange_id', '=',$exchangeId)
             ->where('is_active', '=',ConstantHelper::STATUS_ACTIVE)
             ->first();
+    }
+
+    public static function findNextMemebership($currentLevel, $membershipId){
+        return Membership::all()
+            ->where('level','>',$currentLevel)
+            ->sort('level', 'asc')
+            ->first();
+
+
     }
 
 
