@@ -45,6 +45,7 @@ Route::post('profit-per-hours/get-by-user-and-exchange', [ProfitPerHourControlle
 //exchange
 Route::get('exchanges', [ExchangeController::class, 'index']);
 Route::post('exchanges/get-by-user', [ExchangeController::class, 'getByUser']);
+Route::post('exchanges/update-by-user', [ExchangeController::class, 'updateExchangeByUser']);
 
 //category
 Route::get('category/all', [CategoryController::class, 'index']);

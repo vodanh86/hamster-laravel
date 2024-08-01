@@ -7,6 +7,7 @@ use Carbon\Carbon;
 class ConstantHelper
 {
     public const STATUS_ACTIVE = 1;
+    public const STATUS_IN_ACTIVE = 0;
 
     public static function dateFormatter($dateIn)
     {

@@ -57,4 +57,48 @@ class ExchangeController extends Controller
         }
     }
 
+ public function updateExchangeByUser(Request $request): array
+    {
+        try {
+            $dataInput = $request->all();
+
+            $validator = $this->exchangeValidator->validateUpdateExchangeByUser($dataInput);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            $userId = $dataInput['user_id'];
+            $exchangeId = $dataInput['exchange_id'];
+
+            //deactive exchange cu
+            $currentExchange=ProfitPerHour::all()
+                ->where('user_id','=', $userId)
+                ->where('is_active','=', ConstantHelper::STATUS_ACTIVE)
+                ->first();
+
+            if($currentExchange){
+                $currentExchange->is_active = ConstantHelper::STATUS_IN_ACTIVE;
+                $currentExchange->update();
+            }
+
+            //active exchange moi
+            $exchange=ProfitPerHour::all()
+                ->where('user_id','=', $userId)
+                ->where('exchange_id','=', $exchangeId)
+                ->first();
+
+            if($exchange){
+                $exchange->is_active = ConstantHelper::STATUS_ACTIVE;
+                $exchange->update();
+            }
+
+
+            return $this->_formatBaseResponse(200, $exchange, 'Success');
+
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->toArray();
+            return $this->_formatBaseResponse(400, $errors, 'Failed');
+        }
+    }
+
 }
