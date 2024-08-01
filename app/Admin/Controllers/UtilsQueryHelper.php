@@ -110,7 +110,7 @@ class UtilsQueryHelper
             ->where('cp1.level', $level)->first();
     }
 
-    public static function findProfitPerHourByUserAndExchange($userId, $exchangeId):ProfitPerHour
+    public static function findProfitPerHourByUserAndExchange($userId, $exchangeId):?ProfitPerHour
     {
         return ProfitPerHour::all()
             ->where('user_id', '=',$userId)

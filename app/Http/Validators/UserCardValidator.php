@@ -11,7 +11,7 @@ class UserCardValidator
         $commonRules = [
             'user_id' => 'required|integer|exists:users,id',
             'card_id' => 'required|integer|exists:card,id',
-            'level' => 'required|integer|gt:1',
+            'level' => 'required|integer|gte:1',
             'card_profit_id' => 'required|integer|exists:card_profit,id',
             'exchange_id' => 'required|integer|exists:exchanges,id',
         ];

@@ -49,11 +49,17 @@ class UserCardController extends Controller
             //lay thong tin user_card hien tai
             //TODO: lay profit cua card hien tai - profit cua card hien tại , sau do cong vao profitPerHour, update revenue
             $currentCardProfit = (new UtilsQueryHelper())::findPrevCardProfitByCardAndCardProfit($cardId, $cardProfitId);
+            if (!$currentCardProfit) {
+                return $this->_formatBaseResponse(400, null, 'Error with current card');
+            }
             $currentProfit = $currentCardProfit->profit;
 //            error_log('$currentProfit: ' . $currentProfit);
 
             //next level
             $nextCardProfit = (new UtilsQueryHelper())::findCardProfitByCardAndLevel($cardId, $cardlevel);
+            if (!$nextCardProfit) {
+                return $this->_formatBaseResponse(400, null, 'Card and Level is not exist!');
+            }
             $nextProfit = $nextCardProfit->profit;
 //            error_log('$nextProfit: ' . $nextProfit);
             $increaseProfit = $nextProfit - $currentProfit;
@@ -72,11 +78,14 @@ class UserCardController extends Controller
 
             //update profit per hour
             $profitPerHour = (new UtilsQueryHelper())::findProfitPerHourByUserAndExchange($userId, $exchangeId);
-            $currentProfitPerHour=$profitPerHour->profit_per_hour;
+            if (!$profitPerHour) {
+                return $this->_formatBaseResponse(400, null, 'Exchange is not active!');
+            }
+            $currentProfitPerHour = $profitPerHour->profit_per_hour;
 //            error_log('$currentProfitPerHour: ' . $currentProfitPerHour);
-            $nextProfitPerHour=$currentProfitPerHour + $increaseProfit;
+            $nextProfitPerHour = $currentProfitPerHour + $increaseProfit;
 //            error_log('$nextProfitPerHour: ' . $nextProfitPerHour);
-            $profitPerHour->profit_per_hour=$nextProfitPerHour;
+            $profitPerHour->profit_per_hour = $nextProfitPerHour;
             $profitPerHour->update();
 
 
