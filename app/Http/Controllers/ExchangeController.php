@@ -48,7 +48,7 @@ class ExchangeController extends Controller
                 ->join('exchanges as ex', 'ex.id', '=', 'pp.exchange_id')
                 ->where('pp.is_active', '=', ConstantHelper::STATUS_ACTIVE)
                 ->where('pp.user_id', '=', $userId)
-                ->get();
+                ->first();
 
             return $this->_formatBaseResponse(200, $result, 'Success');
 
