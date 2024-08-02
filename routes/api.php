@@ -30,6 +30,7 @@ Route::post('users/check', [UserController::class, 'index']);
 Route::post('users/login', [UserController::class, 'store']);
 Route::get('users/infor/{id}', [UserController::class, 'userInfor']);
 Route::post('users/update-revenue', [UserController::class, 'updateRevenue']);
+Route::post('users/update-skin', [UserController::class, 'updateSkin']);
 
 //memebership
 Route::get('memberships/all', [MembershipController::class, 'index']);

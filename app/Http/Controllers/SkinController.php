@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
 use App\Models\Skin;
 use Illuminate\Http\Request;
 
 class SkinController extends Controller
 {
-    //
-    public function index(Request $request)
+    use ResponseFormattingTrait;
+
+    public function index()
     {
-        return Skin::all();
+        $data = Skin::all();
+        return $this->_formatBaseResponse(200, $data, 'Success');
     }
-    
+
 }

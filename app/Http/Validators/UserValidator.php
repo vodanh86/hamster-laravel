@@ -28,4 +28,14 @@ class UserValidator
 
         return Validator::make($requestData, $commonRules);
     }
+
+    public function validateUpdateSkin($requestData): \Illuminate\Contracts\Validation\Validator
+    {
+        $commonRules = [
+            'user_id' => 'required|integer|exists:users,id',
+            'skin_id' => 'required|integer|exists:skins,id',
+        ];
+
+        return Validator::make($requestData, $commonRules);
+    }
 }

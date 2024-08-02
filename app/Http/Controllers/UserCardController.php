@@ -74,7 +74,7 @@ class UserCardController extends Controller
 //
 //            //level
             $userCard->created_at = now()->toDateTime();
-            $userCard->save();
+//            $userCard->save();
 
             //update profit per hour
             $profitPerHour = (new UtilsQueryHelper())::findProfitPerHourByUserAndExchange($userId, $exchangeId);
@@ -86,7 +86,7 @@ class UserCardController extends Controller
             $nextProfitPerHour = $currentProfitPerHour + $increaseProfit;
 //            error_log('$nextProfitPerHour: ' . $nextProfitPerHour);
             $profitPerHour->profit_per_hour = $nextProfitPerHour;
-            $profitPerHour->update();
+//            $profitPerHour->update();
 
 
             //update revenue
@@ -99,14 +99,24 @@ class UserCardController extends Controller
 //                error_log('$newRevenue: ' . $newRevenue);
                 $user->revenue = $newRevenue;
 
-                $user->update();
+//                $user->update();
             }
 
 
             $categoryList = (new UtilsQueryHelper())::listCardByUserAndExchange($userId, $exchangeId);
+
+            $updatedUser=[
+                'profitPerHour' => $profitPerHour,
+                'revenue' => $user->revenue
+            ];
+
+            $result=[
+                $categoryList,
+                $updatedUser
+            ];
             //TODO: Them bang lich su trao doi
 
-            return $this->_formatBaseResponse(201, $categoryList, 'Success');
+            return $this->_formatBaseResponse(201, $result, 'Success');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');

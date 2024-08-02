@@ -6,6 +6,7 @@ use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\UserValidator;
 use App\Models\Membership;
 use App\Models\ProfitPerHour;
+use App\Models\Skin;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
 use App\Models\User;
@@ -181,5 +182,57 @@ class UserController extends Controller
         }
     }
 
+    public function updateSkin(Request $request): ?array
+    {
+        try {
+            $dataInput = $request->all();
+
+            $validator = $this->userValidator->validateUpdateSkin($dataInput);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            $userId = $dataInput['user_id'];
+            $skinId = $dataInput['skin_id'];
+
+            $skin = Skin::findOrFail($skinId);
+
+            if (!$skin) {
+                return $this->_formatBaseResponse(400, null, 'Skin not found');
+            }
+            $skinPrice = $skin->price;
+
+            $user = User::findOrFail($userId);
+            if ($user) {
+               $currentSkin= $user->skin_id;
+                //validate skin
+                if( $currentSkin === $skinId){
+                    return $this->_formatBaseResponse(400, null, 'Cannot buy current skin again.');
+                }
+
+                //get current revenue
+                $currentRevenue = (int)$user->revenue;
+                if ($currentRevenue < $skinPrice) {
+                    return $this->_formatBaseResponse(400, null, 'Revenue is not enough to buy this skin.');
+                }
+
+                //buy the skin
+                $user->skin_id = $skinId;
+                $user->revenue = $currentRevenue - $skinPrice;
+                $user->update();
+            }
+
+            $result = [
+                'user' => $user,
+                'skin' => $skin
+            ];
+
+            return $this->_formatBaseResponse(200, $result, 'Success');
+
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->toArray();
+            return $this->_formatBaseResponse(400, $errors, 'Failed');
+        }
+    }
 
 }
