@@ -46,24 +46,33 @@ class UserCardController extends Controller
             $userId = $dataInput["user_id"];;
             $exchangeId = $dataInput["exchange_id"];
 
+            $user = User::findOrFail($userId);
+            if (!$user) {
+                return $this->_formatBaseResponse(400, null, 'User not found');
+            }
+            $currentRevenue = (int)$user->revenue;
+
+            // lay profit cua card hien tai - profit cua card hien tại , sau do cong vao profitPerHour, update revenue
             //lay thong tin user_card hien tai
-            //TODO: lay profit cua card hien tai - profit cua card hien tại , sau do cong vao profitPerHour, update revenue
             $currentCardProfit = (new UtilsQueryHelper())::findPrevCardProfitByCardAndCardProfit($cardId, $cardProfitId);
             if (!$currentCardProfit) {
                 return $this->_formatBaseResponse(400, null, 'Error with current card');
             }
             $currentProfit = $currentCardProfit->profit;
-//            error_log('$currentProfit: ' . $currentProfit);
 
             //next level
             $nextCardProfit = (new UtilsQueryHelper())::findCardProfitByCardAndLevel($cardId, $cardlevel);
             if (!$nextCardProfit) {
                 return $this->_formatBaseResponse(400, null, 'Card and Level is not exist!');
             }
+            //kiem tra xem user co du tien mua card ko
+            $nextProfitRequiredMoney = $nextCardProfit->required_money;
+            if ($currentRevenue < $nextProfitRequiredMoney) {
+                return $this->_formatBaseResponse(400, null, 'Not enough money to buy card.');
+            }
+
             $nextProfit = $nextCardProfit->profit;
-//            error_log('$nextProfit: ' . $nextProfit);
             $increaseProfit = $nextProfit - $currentProfit;
-//            error_log('$increaseProfit: ' . $increaseProfit);
 
             $userCard = new UserCard();
             $userCard->user_id = $userId;
@@ -74,7 +83,7 @@ class UserCardController extends Controller
 //
 //            //level
             $userCard->created_at = now()->toDateTime();
-//            $userCard->save();
+            $userCard->save();
 
             //update profit per hour
             $profitPerHour = (new UtilsQueryHelper())::findProfitPerHourByUserAndExchange($userId, $exchangeId);
@@ -82,35 +91,25 @@ class UserCardController extends Controller
                 return $this->_formatBaseResponse(400, null, 'Exchange is not active!');
             }
             $currentProfitPerHour = $profitPerHour->profit_per_hour;
-//            error_log('$currentProfitPerHour: ' . $currentProfitPerHour);
             $nextProfitPerHour = $currentProfitPerHour + $increaseProfit;
-//            error_log('$nextProfitPerHour: ' . $nextProfitPerHour);
             $profitPerHour->profit_per_hour = $nextProfitPerHour;
-//            $profitPerHour->update();
+            $profitPerHour->update();
 
 
             //update revenue
-            $user = User::findOrFail($userId);
-            if ($user) {
-                //get current value
-                $currentRevenue = (int)$user->revenue;
-//                error_log('$currentRevenue: ' . $currentRevenue);
-                $newRevenue = $currentRevenue - $increaseProfit;
-//                error_log('$newRevenue: ' . $newRevenue);
-                $user->revenue = $newRevenue;
-
-//                $user->update();
-            }
+            $newRevenue = $currentRevenue - $increaseProfit;
+            $user->revenue = $newRevenue;
+            $user->update();
 
 
             $categoryList = (new UtilsQueryHelper())::listCardByUserAndExchange($userId, $exchangeId);
 
-            $updatedUser=[
+            $updatedUser = [
                 'profitPerHour' => $profitPerHour,
                 'revenue' => $user->revenue
             ];
 
-            $result=[
+            $result = [
                 $categoryList,
                 $updatedUser
             ];
