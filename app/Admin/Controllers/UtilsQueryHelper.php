@@ -72,8 +72,8 @@ class UtilsQueryHelper
     public static function getProfitPerHourByUser($userId)
     {
         return ProfitPerHour::all()
-            ->where('user_id','=',$userId)
-            ->where('is_active','=',ConstantHelper::STATUS_ACTIVE)
+            ->where('user_id', '=', $userId)
+            ->where('is_active', '=', ConstantHelper::STATUS_ACTIVE)
             ->first;
     }
 
@@ -111,22 +111,24 @@ class UtilsQueryHelper
             ->where('cp1.level', $level)->first();
     }
 
-    public static function findProfitPerHourByUserAndExchange($userId, $exchangeId):?ProfitPerHour
+    public static function findProfitPerHourByUserAndExchange($userId, $exchangeId): ?ProfitPerHour
     {
         return ProfitPerHour::all()
-            ->where('user_id', '=',$userId)
-            ->where('exchange_id', '=',$exchangeId)
-            ->where('is_active', '=',ConstantHelper::STATUS_ACTIVE)
+            ->where('user_id', '=', $userId)
+            ->where('exchange_id', '=', $exchangeId)
+            ->where('is_active', '=', ConstantHelper::STATUS_ACTIVE)
             ->first();
     }
 
-    public static function findNextMemebership($currentLevel){
+    public static function findNextMemebership($currentLevel)
+    {
         return Membership::where('level', '>', $currentLevel)
             ->orderBy('level', 'asc')
             ->first();
     }
 
-    public static function listCardByUserAndExchange($userId, $exchangeId){
+    public static function listCardByUserAndExchange($userId, $exchangeId)
+    {
         //card da mua
         $categoryList = Category::all();
 
@@ -183,5 +185,35 @@ class UtilsQueryHelper
         return $categoryList;
     }
 
+    public static function findUserByMembership($membershipId)
+    {
+        return DB::table('users as us')
+            ->join('profit_per_hours as pph', 'us.id', '=', 'pph.user_id')
+            ->join('exchanges as ex', 'ex.id', '=', 'pph.exchange_id')
+            ->where('pph.is_active', '=', ConstantHelper::STATUS_ACTIVE)
+            ->where('us.membership_id', '=', $membershipId)
+            ->select('us.id', 'us.first_name', 'us.last_name', 'us.highest_score', 'pph.exchange_id', 'ex.name', 'ex.image')
+            ->orderByDesc('highest_score', 'asc')
+            ->limit(100)
+            ->get();
+    }
+
+    public static function findUserByMembershipAndUser( $userId)
+    {
+        return DB::table('users as us')
+            ->join('profit_per_hours as pph', 'us.id', '=', 'pph.user_id')
+            ->join('exchanges as ex', 'ex.id', '=', 'pph.exchange_id')
+            ->where('pph.is_active', '=', ConstantHelper::STATUS_ACTIVE)
+            ->where('us.id', '=', $userId)
+            ->select('us.id', 'us.first_name', 'us.last_name', 'us.highest_score', 'pph.exchange_id', 'ex.name', 'ex.image')
+            ->orderByDesc('highest_score', 'asc')
+            ->limit(1)
+            ->get();
+    }
+
+    public static function getAllMemberships()
+    {
+        return Membership::all()->sortBy('level')->values();
+    }
 
 }

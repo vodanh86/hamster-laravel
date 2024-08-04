@@ -204,9 +204,9 @@ class UserController extends Controller
 
             $user = User::findOrFail($userId);
             if ($user) {
-               $currentSkin= $user->skin_id;
+                $currentSkin = $user->skin_id;
                 //validate skin
-                if( $currentSkin === $skinId){
+                if ($currentSkin === $skinId) {
                     return $this->_formatBaseResponse(400, null, 'Cannot buy current skin again.');
                 }
 
@@ -229,6 +229,40 @@ class UserController extends Controller
 
             return $this->_formatBaseResponse(200, $result, 'Success');
 
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->toArray();
+            return $this->_formatBaseResponse(400, $errors, 'Failed');
+        }
+    }
+
+    public function getRankByMembership(Request $request): array
+    {
+        try {
+            $dataInput = $request->all();
+
+            $validator = $this->userValidator->validateGetRankByMembership($dataInput);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            $userId = $dataInput['user_id'];
+            $memberships = (new UtilsQueryHelper())::getAllMemberships();
+
+            $currentUser = (new UtilsQueryHelper())::findUserByMembershipAndUser($userId);
+            $user = User::findOrFail($userId);
+            $userMemberShipId = $user->membership_id;
+            foreach ($memberships as $iValue) {
+                $membership = $iValue;
+                $userByRanks = (new UtilsQueryHelper())::findUserByMembership($membership->id);
+
+                $membership->rank = $userByRanks;
+                if ($userMemberShipId === $membership->id) {
+                    $membership->currentUser = $currentUser;
+                }
+            }
+
+
+            return $this->_formatBaseResponse('200', $memberships, 'Success');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');

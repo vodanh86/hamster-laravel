@@ -38,4 +38,13 @@ class UserValidator
 
         return Validator::make($requestData, $commonRules);
     }
+
+    public function validateGetRankByMembership($requestData): \Illuminate\Contracts\Validation\Validator
+    {
+        $commonRules = [
+            'user_id' => 'required|integer|exists:users,id',
+        ];
+
+        return Validator::make($requestData, $commonRules);
+    }
 }
