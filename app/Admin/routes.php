@@ -20,4 +20,5 @@ Route::group([
     $router->resource('category', CategoryController::class);
     $router->resource('card',CardController::class);
     $router->resource('card-profit',CardProfitController::class);
+    $router->resource('earn',EarnController::class);
 });
