@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\ConstantHelper;
 use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\UserValidator;
 use App\Models\Membership;
 use App\Models\ProfitPerHour;
 use App\Models\Skin;
+use App\Models\UserFriend;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
 use App\Models\User;
@@ -68,6 +70,8 @@ class UserController extends Controller
             }
 
             $telegram_id = $dataInput['telegram_id'];
+            $reference_id = $dataInput['reference_telegram_id'];
+
             $user = User::where("telegram_id", $telegram_id)->first();
             if ($user) {
                 $user->last_login = Carbon::now();
@@ -89,6 +93,30 @@ class UserController extends Controller
                 $user->is_first_login = 1;
                 $user->created_at = now()->toDateTime();
                 $user->save();
+
+                //check reference or not
+                if (!is_null($reference_id)) {
+                    //insert bang user friend
+                    $userFriend = new UserFriend();
+                    $userFriend->user_id = $user->id;
+                    $userFriend->reference_id = $reference_id;
+                    $userFriend->type = ConstantHelper::USER_FRIEND_TYPE_FRIEND;
+
+                    $userFriend->save();
+
+
+                    ////cong diem reference
+                    //cong diem nguoi gioi thieu
+                    $referenceUser = User::findOrFail($reference_id);
+                    if ($referenceUser) {
+                        $referenceUser->revenue += 10000;
+                        $referenceUser->update();
+                    }
+                    //cong diem nguoi duoc gioi thieu
+                    $user->revenue += 5000;
+                    $user->update();
+
+                }
 
                 //save exchangeId  into ProfitPerHour
                 $userId = $user->id;

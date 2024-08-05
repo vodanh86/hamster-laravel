@@ -13,6 +13,7 @@ class UserValidator
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'username' => 'required|string',
+            'reference_telegram_id' => 'nullable|string',
             'language_code' => 'required|string',
         ];
 
