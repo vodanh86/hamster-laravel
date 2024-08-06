@@ -9,6 +9,7 @@ class ConstantHelper
     public const STATUS_ACTIVE = 1;
     public const STATUS_IN_ACTIVE = 0;
     public const USER_FRIEND_TYPE_FRIEND = 1;
+    public const USER_EARN_TYPE_DAILY_EARN = 3;
 
     public static function dateFormatter($dateIn)
     {

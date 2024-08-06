@@ -23,7 +23,7 @@ class TestController extends Controller
 
     public function testMethod()
     {
-       return (new UtilsQueryHelper())::getEarnByUser(1);
+       return (new UtilsQueryHelper())::findIsNotCompletedByUser(1,5,3);
     }
 
 }

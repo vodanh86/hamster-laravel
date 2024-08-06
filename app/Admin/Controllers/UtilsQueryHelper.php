@@ -79,7 +79,7 @@ class UtilsQueryHelper
     public static function getEarnByUser($userId)
     {
         $data = DB::table('user_earn as ue')
-            ->join('earn as ea', 'ea.id','=', 'ue.earn_id')
+            ->join('earn as ea', 'ea.id', '=', 'ue.earn_id')
             ->where('ue.user_id', '=', $userId)
             ->select('ue.id', 'ue.is_completed', 'ea.id as earn_id', 'ea.name', 'ea.type', 'ea.description', 'ea.link', 'ea.image', 'ea.reward', 'ea.order')
             ->orderBy('ea.type', 'asc')
@@ -252,5 +252,28 @@ class UtilsQueryHelper
     {
         return Membership::all()->sortBy('level')->values();
     }
+
+    public static function findIsNotCompletedByUser($userId, $earnId, $type): Collection
+    {
+        $subQuery = Earn::where('id', '=', $earnId)
+            ->where('type', '=', $type)->first();
+
+        return DB::table('earn as ea')
+            ->join('user_earn as ue', 'ea.id', '=', 'ue.earn_id')
+            ->where('ea.type', '=', $type)
+            ->where('ea.order', '<', $subQuery->order)
+            ->where('ue.is_completed', '=', ConstantHelper::STATUS_IN_ACTIVE)
+            ->where('ue.user_id', '=', $userId)
+            ->select(
+                'ea.id'
+            )
+            ->get();
+
+    }
+
+//    public static function findEarnByUserAndEarn($userId,$earnId)
+//    {
+//        return Membership::all()->sortBy('level')->values();
+//    }
 
 }

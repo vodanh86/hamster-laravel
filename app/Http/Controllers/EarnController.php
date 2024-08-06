@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\ConstantHelper;
 use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\EarnValidator;
 use App\Models\Earn;
@@ -65,32 +66,42 @@ class EarnController extends Controller
             $userEarn = UserEarn::findOrFail($userEarnId);
             if ($userEarn) {
                 $userEarnStatus = $userEarn->is_completed;
-                if ($userEarnStatus === 0) {
-                    $userEarn->is_completed = 1;
+                $earnId = $userEarn->earn_id;
 
+                $earn = Earn::findOrFail($earnId);
+                if (!$earn) {
+                    return $this->_formatBaseResponse(400, null, 'Earn not found');
+                }
+                if ($userEarnStatus === 0) {
+                    //check neu la Daily task
+                    $earnType = $earn->type;
+                    if ($earnType === ConstantHelper::USER_EARN_TYPE_DAILY_EARN) {
+                        $preEarns = (new UtilsQueryHelper())::findIsNotCompletedByUser($userId, $earnId, ConstantHelper::USER_EARN_TYPE_DAILY_EARN);
+                        if (count($preEarns)) {
+                            //co daily quen chua check
+                            return $this->_formatBaseResponse(400, null, 'Please claim previously task');
+                        }
+                    }
+
+                    $userEarn->is_completed = 1;
                     $userEarn->update();
 
                     //earn
-                    $earn = Earn::findOrFail($userEarn->earn_id);
-                    if ($earn) {
-                        $reward = $earn->reward;
-                        //cong tien
-                        $user = User::findOrFail($userId);
-                        if ($user) {
-                            $currentRevenue = (int)$user->revenue;
-                            $currentHighestScore = $user->highest_score;
-                            $newRevenue = $currentRevenue + $reward;
-                            if ($newRevenue > $currentHighestScore) {
-                                $user->highest_score = $newRevenue;
-                            }
-                            $user->revenue = $newRevenue;
-
-                            $user->update();
-                        } else {
-                            return $this->_formatBaseResponse(400, null, 'Earn not found');
+                    $reward = $earn->reward;
+                    //cong tien
+                    $user = User::findOrFail($userId);
+                    if ($user) {
+                        $currentRevenue = (int)$user->revenue;
+                        $currentHighestScore = $user->highest_score;
+                        $newRevenue = $currentRevenue + $reward;
+                        if ($newRevenue > $currentHighestScore) {
+                            $user->highest_score = $newRevenue;
                         }
+                        $user->revenue = $newRevenue;
+
+                        $user->update();
                     } else {
-                        return $this->_formatBaseResponse(400, null, 'Earn not found');
+                        return $this->_formatBaseResponse(400, null, 'User not found');
                     }
 
                 }
