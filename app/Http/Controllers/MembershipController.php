@@ -43,7 +43,7 @@ class MembershipController extends Controller
             }
 
             $userId = $dataInput['user_id'];
-            $user = User::with('membership')->find($userId)->first();
+            $user = User::with('membership')->find($userId);
 
             if ($user && $user->membership) {
                 $membership = $user->membership;
