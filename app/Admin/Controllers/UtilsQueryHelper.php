@@ -5,10 +5,12 @@ namespace App\Admin\Controllers;
 use App\Models\Card;
 use App\Models\CardProfit;
 use App\Models\Category;
+use App\Models\Earn;
 use App\Models\Exchange;
 use App\Models\Membership;
 use App\Models\ProfitPerHour;
 use App\Models\User;
+use App\Models\UserEarn;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -69,9 +71,43 @@ class UtilsQueryHelper
         return Exchange::all();
     }
 
+    public static function getAllEarns()
+    {
+        return Earn::all();
+    }
+
+    public static function getEarnByUser($userId)
+    {
+        $data = DB::table('user_earn as ue')
+            ->join('earn as ea', 'ea.id','=', 'ue.earn_id')
+            ->where('ue.user_id', '=', $userId)
+            ->select('ue.id', 'ue.is_completed', 'ea.id as earn_id', 'ea.name', 'ea.type', 'ea.description', 'ea.link', 'ea.image', 'ea.reward', 'ea.order')
+            ->orderBy('ea.type', 'asc')
+            ->orderBy('ea.order', 'asc')
+            ->get();
+
+        return $data->groupBy('type')->map(function ($items, $type) {
+            return [
+                'type' => $type,
+                'earn' => $items->map(function ($item) {
+                    return [
+                        'user_earn_id' => $item->id,
+                        'is_completed' => $item->is_completed,
+                        'name' => $item->name,
+                        'description' => $item->description,
+                        'link' => $item->link,
+                        'image' => $item->image,
+                        'reward' => $item->reward,
+                        'order' => $item->order
+                    ];
+                })->toArray()
+            ];
+        })->values()->toArray();
+    }
+
     public static function getProfitPerHourByUser($userId)
     {
-        $data= ProfitPerHour::all()
+        $data = ProfitPerHour::all()
             ->where('user_id', '=', $userId)
             ->where('is_active', '=', ConstantHelper::STATUS_ACTIVE)
             ->first();
@@ -199,7 +235,7 @@ class UtilsQueryHelper
             ->get();
     }
 
-    public static function findUserByMembershipAndUser( $userId)
+    public static function findUserByMembershipAndUser($userId)
     {
         return DB::table('users as us')
             ->join('profit_per_hours as pph', 'us.id', '=', 'pph.user_id')

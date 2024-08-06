@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EarnController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserCardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -62,4 +64,10 @@ Route::post('user-card/get-by-user-and-exchange-and-category', [UserCardControll
 //card
 Route::post('card/get-by-category', [CardController::class, 'getByCategory']);
 Route::post('card/get-all', [CardController::class, 'getAllWithCategory']);
-Route::get('card/test', [CardController::class, 'getCardsByUserIdAndCategoryId']);
+
+//just for test
+Route::get('test', [TestController::class, 'testMethod']);
+
+//earn
+Route::post('earn/get-by-user', [EarnController::class, 'getEarnByUser']);
+

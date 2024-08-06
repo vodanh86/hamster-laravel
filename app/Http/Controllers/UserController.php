@@ -8,6 +8,7 @@ use App\Http\Validators\UserValidator;
 use App\Models\Membership;
 use App\Models\ProfitPerHour;
 use App\Models\Skin;
+use App\Models\UserEarn;
 use App\Models\UserFriend;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
@@ -135,8 +136,23 @@ class UserController extends Controller
                     }
                     $profitPerHour->save();
                 }
-
                 $user->profitPerHour = (new UtilsQueryHelper())::getProfitPerHourByUser($userId);
+
+                //add earn
+                $earns = (new UtilsQueryHelper())::getAllEarns();
+
+                for ($j = 0, $jMax = count($earns); $j < $jMax; $j++) {
+                    $userEarn = new UserEarn();
+                    $userEarn->user_id = $userId;
+                    $userEarn->earn_id = $earns[$j]->id;
+                    $userEarn->is_completed = ConstantHelper::STATUS_IN_ACTIVE;
+
+                    $userEarn->save();
+                }
+
+                $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
+
+
             }
 
             return $this->_formatBaseResponse(201, $user, 'Success');
