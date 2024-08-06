@@ -297,4 +297,26 @@ class UserController extends Controller
         }
     }
 
+    public function getFriendsByUser($id): ?array
+    {
+        try {
+            $user = User::findOrFail($id);
+
+            $userFriendList = UserFriend::where('reference_id', $id)->get();
+            // Get user details for these friends
+            $userFriends = $userFriendList->map(function ($userFriend) {
+                return $userFriend->user;
+            });
+
+            $result=[
+                'user' => $user,
+                "userFriends" => $userFriends
+            ];
+
+            return $this->_formatBaseResponse('200', $result, 'Success');
+        } catch (ModelNotFoundException $e) {
+            return $this->_formatBaseResponse('404', ['error' => 'User not found'], 'Failed');
+        }
+    }
+
 }

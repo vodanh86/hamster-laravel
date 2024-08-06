@@ -50,4 +50,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Skin::class, 'skin_id');
     }
+
+    public function friends()
+    {
+        return $this->hasMany(UserFriend::class, 'reference_id');
+    }
+
 }

@@ -33,6 +33,9 @@ Route::post('users/update-revenue', [UserController::class, 'updateRevenue']);
 Route::post('users/update-skin', [UserController::class, 'updateSkin']);
 Route::post('users/rank-by-membership', [UserController::class, 'getRankByMembership']);
 
+//user-friend
+Route::get('users/get-friends/{id}', [UserController::class, 'getFriendsByUser']);
+
 //memebership
 Route::get('memberships/all', [MembershipController::class, 'index']);
 Route::post('memberships/get-by-user', [MembershipController::class, 'getByUser']);
