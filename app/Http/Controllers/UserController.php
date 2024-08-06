@@ -120,7 +120,6 @@ class UserController extends Controller
 
                 //save exchangeId  into ProfitPerHour
                 $userId = $user->id;
-                $exchangeId = (new UtilsQueryHelper())::getFirstExchange();
                 $exchanges = (new UtilsQueryHelper())::getAllExchanges();
                 $flagActive = true;
                 for ($i = 0, $iMax = count($exchanges); $i < $iMax; $i++) {
@@ -308,7 +307,7 @@ class UserController extends Controller
                 return $userFriend->user;
             });
 
-            $result=[
+            $result = [
                 'user' => $user,
                 "userFriends" => $userFriends
             ];

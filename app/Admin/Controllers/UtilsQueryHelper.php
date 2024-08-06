@@ -71,10 +71,11 @@ class UtilsQueryHelper
 
     public static function getProfitPerHourByUser($userId)
     {
-        return ProfitPerHour::all()
+        $data= ProfitPerHour::all()
             ->where('user_id', '=', $userId)
             ->where('is_active', '=', ConstantHelper::STATUS_ACTIVE)
-            ->first;
+            ->first();
+        return $data;
     }
 
     public static function getActiveExchangeByUser($userId): ?ProfitPerHour
