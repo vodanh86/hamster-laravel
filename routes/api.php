@@ -70,4 +70,5 @@ Route::get('test', [TestController::class, 'testMethod']);
 
 //earn
 Route::post('earn/get-by-user', [EarnController::class, 'getEarnByUser']);
+Route::post('earn/update-by-user', [EarnController::class, 'updateEarn']);
 
