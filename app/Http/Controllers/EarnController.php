@@ -64,6 +64,7 @@ class EarnController extends Controller
 
             //TODO: sau them check nhiem vu nua. Hien tai click vao thi auto completed
             $userEarn = UserEarn::findOrFail($userEarnId);
+            $user=new User();
             if ($userEarn) {
                 $userEarnStatus = $userEarn->is_completed;
                 $earnId = $userEarn->earn_id;
@@ -100,19 +101,27 @@ class EarnController extends Controller
                         $user->revenue = $newRevenue;
 
                         $user->update();
+
                     } else {
                         return $this->_formatBaseResponse(400, null, 'User not found');
                     }
-
                 }
-
             } else {
                 return $this->_formatBaseResponse(400, null, 'User Earn not found');
             }
 
             $earns = (new UtilsQueryHelper())::getEarnByUser($userId);
+            $membership = (new UtilsQueryHelper())::findMemberShipByUser($userId);
 
-            return $this->_formatBaseResponse(200, $earns, 'Success');
+            $result=[
+                "earns"=>$earns,
+                "membership"=>$membership,
+                'user'=>$user
+            ];
+
+            return $this->_formatBaseResponse(200, $result, 'Success');
+
+
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');

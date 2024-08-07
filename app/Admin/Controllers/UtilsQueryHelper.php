@@ -271,9 +271,13 @@ class UtilsQueryHelper
 
     }
 
-//    public static function findEarnByUserAndEarn($userId,$earnId)
-//    {
-//        return Membership::all()->sortBy('level')->values();
-//    }
+    public static function findMemberShipByUser($userId): Collection
+    {
+        return DB::table('memberships as me')
+            ->join('users as us', 'us.membership_id', '=', 'me.id')
+            ->where('us.id', '=', $userId)
+            ->select('us.membership_id', 'me.name', 'me.image', 'me.money', 'me.level', 'me.short_money')
+            ->get();
+    }
 
 }

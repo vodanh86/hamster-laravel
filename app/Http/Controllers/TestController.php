@@ -23,7 +23,7 @@ class TestController extends Controller
 
     public function testMethod()
     {
-       return (new UtilsQueryHelper())::findIsNotCompletedByUser(1,5,3);
+       return (new UtilsQueryHelper())::findMemberShipByUser(1);
     }
 
 }
