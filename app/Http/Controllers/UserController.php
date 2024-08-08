@@ -8,6 +8,7 @@ use App\Http\Validators\UserValidator;
 use App\Models\Membership;
 use App\Models\ProfitPerHour;
 use App\Models\Skin;
+use App\Models\UserBoots;
 use App\Models\UserEarn;
 use App\Models\UserFriend;
 use App\Traits\ResponseFormattingTrait;
@@ -152,6 +153,19 @@ class UserController extends Controller
 
                 $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
 
+                //add boots
+                $boots = (new UtilsQueryHelper())::getAllBoots();
+
+                for ($k = 0, $kMax = count($boots); $k < $kMax; $k++) {
+                    $userBoots = new UserBoots();
+                    $userBoots->user_id = $userId;
+                    $userBoots->boots_id = $boots[$k]->id;
+                    $userBoots->is_completed = ConstantHelper::STATUS_IN_ACTIVE;
+
+                    $userBoots->save();
+                }
+
+                $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
             }
 

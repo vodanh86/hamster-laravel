@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Boots;
 use App\Models\Card;
 use App\Models\CardProfit;
 use App\Models\Category;
@@ -74,6 +75,11 @@ class UtilsQueryHelper
         return Earn::all();
     }
 
+    public static function getAllBoots()
+    {
+        return Boots::all();
+    }
+
     public static function getEarnByUser($userId)
     {
         $data = DB::table('user_earn as ue')
@@ -102,6 +108,37 @@ class UtilsQueryHelper
             ];
         })->values()->toArray();
     }
+
+    public static function getBootsByUser($userId)
+    {
+        $data = DB::table('user_boots as ue')
+            ->join('boots as ea', 'ea.id', '=', 'ue.boots_id')
+            ->where('ue.user_id', '=', $userId)
+            ->select('ue.id', 'ue.is_completed', 'ea.id as boots_id', 'ea.name','ea.required_money','ea.required_short_money', 'ea.type', 'ea.sub_type', 'ea.level', 'ea.image', 'ea.value', 'ea.order')
+            ->orderBy('ea.type', 'asc')
+            ->orderBy('ea.order', 'asc')
+            ->get();
+
+        return $data->groupBy('type')->map(function ($items, $type) {
+            return [
+                'type' => $type,
+                'boots' => $items->map(function ($item) {
+                    return [
+                        'user_boots_id' => $item->id,
+                        'boots_id' => $item->boots_id,
+                        'name' => $item->name,
+                        'required_money' => $item->is_completed,
+                        'sub_type' => $item->sub_type,
+                        'level' => $item->level,
+                        'image' => $item->image,
+                        'value' => $item->value,
+                        'order' => $item->order
+                    ];
+                })->toArray()
+            ];
+        })->values()->toArray();
+    }
+
 
     public static function getProfitPerHourByUser($userId)
     {
