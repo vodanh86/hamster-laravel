@@ -22,4 +22,6 @@ Route::group([
     $router->resource('card-profit',CardProfitController::class);
     $router->resource('earn',EarnController::class);
     $router->resource('user-earn',UserEarnController::class);
+    $router->resource('boots',BootsController::class);
+    $router->resource('user-boots',BootsController::class);
 });

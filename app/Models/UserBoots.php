@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class UserEarn extends Model
+class UserBoots extends Model
 {
-    protected $table = 'user_earn';
+    protected $table = 'user_boots';
 
     protected $hidden = [
     ];
@@ -16,9 +16,10 @@ class UserEarn extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function earn(): BelongsTo
+
+    public function boots(): BelongsTo
     {
-        return $this->belongsTo(Earn::class, 'earn_id');
+        return $this->belongsTo(Boots::class, 'boots_id');
     }
 
     protected $appends = [];

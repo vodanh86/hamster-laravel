@@ -35,9 +35,8 @@ class UtilsQueryHelper
 
     public static function getCombinedCard(): Collection
     {
-        $data = CardProfit::with('card')->get()
+        return CardProfit::with('card')->get()
             ->map(function ($cardProfit) {
-                error_log($cardProfit);
                 $display_name = $cardProfit->card->name . ' - Level ' . $cardProfit->level;
 
                 return [
@@ -46,7 +45,6 @@ class UtilsQueryHelper
                 ];
             })
             ->pluck('display_name', 'id');
-        return $data;
     }
 
     public static function getCombinedCardById(int $cardProfitId): string
