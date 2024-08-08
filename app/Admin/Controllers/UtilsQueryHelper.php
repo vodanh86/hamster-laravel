@@ -164,6 +164,13 @@ class UtilsQueryHelper
             ->first();
     }
 
+    public static function findMemebershipByMoney($money)
+    {
+        return Membership::where('money', '<=', $money)
+            ->orderBy('level', 'desc')
+            ->first();
+    }
+
     public static function listCardByUserAndExchange($userId, $exchangeId)
     {
         //card da mua

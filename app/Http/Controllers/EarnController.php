@@ -6,6 +6,7 @@ use App\Admin\Controllers\ConstantHelper;
 use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\EarnValidator;
 use App\Models\Earn;
+use App\Models\Membership;
 use App\Models\User;
 use App\Models\UserEarn;
 use App\Traits\ResponseFormattingTrait;
@@ -64,7 +65,7 @@ class EarnController extends Controller
 
             //TODO: sau them check nhiem vu nua. Hien tai click vao thi auto completed
             $userEarn = UserEarn::findOrFail($userEarnId);
-            $user=new User();
+            $user = new User();
             if ($userEarn) {
                 $userEarnStatus = $userEarn->is_completed;
                 $earnId = $userEarn->earn_id;
@@ -99,8 +100,11 @@ class EarnController extends Controller
                             $user->highest_score = $newRevenue;
                         }
                         $user->revenue = $newRevenue;
-
+                        //membership
+                        $nextMembership = (new UtilsQueryHelper())::findMemebershipByMoney($newRevenue);
+                        $user->membership_id = $nextMembership->id;
                         $user->update();
+
 
                     } else {
                         return $this->_formatBaseResponse(400, null, 'User not found');
@@ -113,10 +117,10 @@ class EarnController extends Controller
             $earns = (new UtilsQueryHelper())::getEarnByUser($userId);
             $membership = (new UtilsQueryHelper())::findMemberShipByUser($userId);
 
-            $result=[
-                "earns"=>$earns,
-                "membership"=>$membership,
-                'user'=>$user
+            $result = [
+                "earns" => $earns,
+                "membership" => $membership,
+                'user' => $user
             ];
 
             return $this->_formatBaseResponse(200, $result, 'Success');
