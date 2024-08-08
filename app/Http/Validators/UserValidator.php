@@ -10,9 +10,9 @@ class UserValidator
     {
         $commonRules = [
             'telegram_id' => 'required|string',
-            'first_name' => 'required|string',
+            'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
-            'username' => 'required|string',
+            'username' => 'nullable|string',
             'reference_telegram_id' => 'nullable|string',
             'language_code' => 'required|string',
         ];
