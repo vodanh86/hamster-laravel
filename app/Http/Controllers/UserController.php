@@ -75,6 +75,7 @@ class UserController extends Controller
             $reference_id = $dataInput['reference_telegram_id'];
 
             $user = User::where("telegram_id", $telegram_id)->first();
+            $userId = null;
             if ($user) {
                 $user->last_login = Carbon::now();
                 $user->is_first_login = 0;
@@ -168,6 +169,7 @@ class UserController extends Controller
 //                $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
             }
+            $userId = $user->id;
             $user->profitPerHour = (new UtilsQueryHelper())::getProfitPerHourByUser($userId);
             $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
 
