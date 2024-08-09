@@ -75,4 +75,5 @@ Route::post('earn/update-by-user', [EarnController::class, 'updateEarn']);
 
 //boots
 Route::post('boots/get-by-user', [BootsController::class, 'getBootsByUser']);
+Route::post('boots/update-by-user', [BootsController::class, 'updateBoots']);
 

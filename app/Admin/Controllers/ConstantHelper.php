@@ -9,7 +9,16 @@ class ConstantHelper
     public const STATUS_ACTIVE = 1;
     public const STATUS_IN_ACTIVE = 0;
     public const USER_FRIEND_TYPE_FRIEND = 1;
+    public const BOOTS_TYPE_FREE = 0;
+    public const BOOTS_TYPE_FEE = 1;
+    public const BOOTS_SUBTYPE_ENERGY = 0;
+    public const BOOTS_SUBTYPE_TURBO = 1;
+    public const BOOTS_SUBTYPE_MULTI_TAP = 2;
+    public const BOOTS_SUBTYPE_ENERGY_LIMIT = 3;
+
     public const USER_EARN_TYPE_DAILY_EARN = 3;
+
+
 
     public static function dateFormatter($dateIn)
     {

@@ -19,7 +19,12 @@ class BootsValidator
     {
         $commonRules = [
             'user_id' => 'required|integer|exists:users,id',
-            'user_boots_id' => 'required|integer|exists:user_boots,id',
+            'current_user_boots_id' => 'required|integer|exists:user_boots,id',
+            'current_boots_level' => 'required|integer',
+            'next_user_boots_id' => 'required|integer|exists:user_boots,id',
+            'next_boots_level' => 'required|integer',
+            'type' => 'required|integer',
+            'sub_type' => 'required|integer',
 //            'is_completed' => 'required|integer'
         ];
 
