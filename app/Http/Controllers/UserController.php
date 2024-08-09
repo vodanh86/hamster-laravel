@@ -137,7 +137,7 @@ class UserController extends Controller
                     }
                     $profitPerHour->save();
                 }
-                $user->profitPerHour = (new UtilsQueryHelper())::getProfitPerHourByUser($userId);
+//                $user->profitPerHour = (new UtilsQueryHelper())::getProfitPerHourByUser($userId);
 
                 //add earn
                 $earns = (new UtilsQueryHelper())::getAllEarns();
@@ -151,7 +151,7 @@ class UserController extends Controller
                     $userEarn->save();
                 }
 
-                $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
+//                $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
 
                 //add boots
                 $boots = (new UtilsQueryHelper())::getAllBoots();
@@ -165,9 +165,13 @@ class UserController extends Controller
                     $userBoots->save();
                 }
 
-                $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
+//                $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
             }
+            $user->profitPerHour = (new UtilsQueryHelper())::getProfitPerHourByUser($userId);
+            $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
+
+            $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
             return $this->_formatBaseResponse(201, $user, 'Success');
         } catch (ValidationException $e) {
