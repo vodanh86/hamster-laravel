@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BootsController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EarnController;
@@ -71,4 +72,7 @@ Route::get('test', [TestController::class, 'testMethod']);
 //earn
 Route::post('earn/get-by-user', [EarnController::class, 'getEarnByUser']);
 Route::post('earn/update-by-user', [EarnController::class, 'updateEarn']);
+
+//boots
+Route::post('boots/get-by-user', [BootsController::class, 'getBootsByUser']);
 

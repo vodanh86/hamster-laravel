@@ -116,25 +116,32 @@ class UtilsQueryHelper
             ->where('ue.user_id', '=', $userId)
             ->select('ue.id', 'ue.is_completed', 'ea.id as boots_id', 'ea.name','ea.required_money','ea.required_short_money', 'ea.type', 'ea.sub_type', 'ea.level', 'ea.image', 'ea.value', 'ea.order')
             ->orderBy('ea.type', 'asc')
+            ->orderBy('ea.sub_type', 'asc')
             ->orderBy('ea.order', 'asc')
             ->get();
 
         return $data->groupBy('type')->map(function ($items, $type) {
             return [
                 'type' => $type,
-                'boots' => $items->map(function ($item) {
+                'sub_types' => $items->groupBy('sub_type')->map(function ($subItems, $subType) {
                     return [
-                        'user_boots_id' => $item->id,
-                        'boots_id' => $item->boots_id,
-                        'name' => $item->name,
-                        'required_money' => $item->is_completed,
-                        'sub_type' => $item->sub_type,
-                        'level' => $item->level,
-                        'image' => $item->image,
-                        'value' => $item->value,
-                        'order' => $item->order
+                        'sub_type' => $subType,
+                        'boots' => $subItems->map(function ($item) {
+                            return [
+                                'user_boots_id' => $item->id,
+                                'boots_id' => $item->boots_id,
+                                'name' => $item->name,
+                                'required_money' => $item->required_money,
+                                'required_short_money' => $item->required_short_money,
+                                'is_completed' => $item->is_completed,
+                                'level' => $item->level,
+                                'image' => $item->image,
+                                'value' => $item->value,
+                                'order' => $item->order
+                            ];
+                        })->toArray()
                     ];
-                })->toArray()
+                })->values()->toArray()
             ];
         })->values()->toArray();
     }
