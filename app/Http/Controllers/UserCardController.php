@@ -104,7 +104,7 @@ class UserCardController extends Controller
 
             $categoryList = (new UtilsQueryHelper())::listCardByUserAndExchange($userId, $exchangeId);
 
-            $membership = (new UtilsQueryHelper())::findMemberShipByUser($userId);
+            $membership = (new UtilsQueryHelper())::getMemberShipByUserV02($userId);
 
             $updatedUser = [
                 'profitPerHour' => $profitPerHour,

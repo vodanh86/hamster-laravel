@@ -114,7 +114,7 @@ class UtilsQueryHelper
         $data = DB::table('user_boots as ue')
             ->join('boots as ea', 'ea.id', '=', 'ue.boots_id')
             ->where('ue.user_id', '=', $userId)
-            ->select('ue.id', 'ue.is_completed', 'ea.id as boots_id', 'ea.name','ea.required_money','ea.required_short_money', 'ea.type', 'ea.sub_type', 'ea.level', 'ea.image', 'ea.value', 'ea.order')
+            ->select('ue.id', 'ue.is_completed', 'ea.id as boots_id', 'ea.name', 'ea.required_money', 'ea.required_short_money', 'ea.type', 'ea.sub_type', 'ea.level', 'ea.image', 'ea.value', 'ea.order')
             ->orderBy('ea.type', 'asc')
             ->orderBy('ea.sub_type', 'asc')
             ->orderBy('ea.order', 'asc')
@@ -329,4 +329,32 @@ class UtilsQueryHelper
             ->get();
     }
 
+
+    public static function getMemberShipByUserV02($userId)
+    {
+        $user = User::with('membership')->find($userId);
+
+        if ($user && $user->membership) {
+            $membership = $user->membership;
+
+            //lay so tien de len level
+            $requiredMoney = $membership->money;
+            $requiredShortMoney = $membership->short_money;
+
+            //lay thu hang theo level
+            $maxMembership = Membership::all()->sortByDesc('level')->first();
+            $maxLevel = $maxMembership->level;
+
+            $result = [
+                "membership" => $membership,
+                "current_level" => $membership->level,
+                "max_level" => $maxLevel,
+                "required_money" => $requiredMoney,
+                "required_short_money" => $requiredShortMoney
+            ];
+
+            return $result;
+        }
+        return null;
+    }
 }

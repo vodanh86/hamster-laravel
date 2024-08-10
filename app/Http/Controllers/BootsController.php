@@ -117,16 +117,16 @@ class BootsController extends Controller
             $currentUserBoots->update();
             $nextUserBoots->update();
 
-            $earns = (new UtilsQueryHelper())::getEarnByUser($userId);
+//            $earns = (new UtilsQueryHelper())::getEarnByUser($userId);
 
-            $membership = (new UtilsQueryHelper())::findMemberShipByUser($userId);
+            $membership = (new UtilsQueryHelper())::getMemberShipByUserV02($userId);
 
             $boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
             $maxEnergy = $user->energy_limit;;
 
             $result = [
-                "earns" => $earns,
+//                "earns" => $earns,
                 "membership" => $membership,
                 'user' => $user,
                 'boots' => $boots,

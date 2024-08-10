@@ -115,7 +115,7 @@ class EarnController extends Controller
             }
 
             $earns = (new UtilsQueryHelper())::getEarnByUser($userId);
-            $membership = (new UtilsQueryHelper())::findMemberShipByUser($userId);
+            $membership = (new UtilsQueryHelper())::getMemberShipByUserV02($userId);
 
             $result = [
                 "earns" => $earns,

@@ -171,7 +171,7 @@ class UserController extends Controller
             }
             $userId = $user->id;
             $user->profitPerHour = (new UtilsQueryHelper())::getProfitPerHourByUser($userId);
-            $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
+//            $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
 
             $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
