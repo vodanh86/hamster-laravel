@@ -97,7 +97,7 @@ class UserCardController extends Controller
 
 
             //update revenue
-            $newRevenue = $currentRevenue - $increaseProfit;
+            $newRevenue = $currentRevenue - $nextProfit->required_money;
             $user->revenue = $newRevenue;
             $user->update();
 
