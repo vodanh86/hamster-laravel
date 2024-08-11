@@ -129,7 +129,7 @@ class UserController extends Controller
                     $profitPerHour = new ProfitPerHour();
                     $profitPerHour->user_id = $userId;
                     $profitPerHour->exchange_id = $exchanges[$i]->id;
-                    $profitPerHour->profit_per_hour = 0;
+                    $profitPerHour->profit_per_hour = 5000;
                     if ($flagActive) {
                         $profitPerHour->is_active = 1;
                         $flagActive = false;
