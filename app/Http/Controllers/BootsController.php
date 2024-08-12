@@ -5,13 +5,9 @@ namespace App\Http\Controllers;
 use App\Admin\Controllers\ConstantHelper;
 use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\BootsValidator;
-use App\Http\Validators\EarnValidator;
 use App\Models\Boots;
-use App\Models\Earn;
-use App\Models\Membership;
 use App\Models\User;
 use App\Models\UserBoots;
-use App\Models\UserEarn;
 use App\Traits\ResponseFormattingTrait;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -123,14 +119,17 @@ class BootsController extends Controller
 
             $boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
-            $maxEnergy = $user->energy_limit;;
+            $maxEnergy = $user->energy_limit;
+
+            $profitPerHour=(new UtilsQueryHelper())::getProfitPerHourByUser($userId);
 
             $result = [
 //                "earns" => $earns,
                 "membership" => $membership,
                 'user' => $user,
                 'boots' => $boots,
-                'max_energy' => $maxEnergy
+                'max_energy' => $maxEnergy,
+                "profitPerHour" => $profitPerHour
             ];
 
             return $this->_formatBaseResponse(200, $result, 'Success');

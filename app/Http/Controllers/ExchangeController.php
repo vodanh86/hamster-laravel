@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Admin\Controllers\ConstantHelper;
+use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\ExchangeValidator;
 use App\Models\Exchange;
 use App\Models\ProfitPerHour;
@@ -93,8 +94,14 @@ class ExchangeController extends Controller
                 $exchange->update();
             }
 
+            $profitPerHour=(new UtilsQueryHelper())::getProfitPerHourByUser($userId);
 
-            return $this->_formatBaseResponse(200, $exchange, 'Success');
+            $result =[
+                "exchange" => $exchange,
+                "profitPerHour" => $profitPerHour
+            ];
+
+            return $this->_formatBaseResponse(200, $result, 'Success');
 
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();

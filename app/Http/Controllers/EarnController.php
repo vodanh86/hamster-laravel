@@ -116,11 +116,13 @@ class EarnController extends Controller
 
             $earns = (new UtilsQueryHelper())::getEarnByUser($userId);
             $membership = (new UtilsQueryHelper())::getMemberShipByUserV02($userId);
+            $profitPerHour=(new UtilsQueryHelper())::getProfitPerHourByUser($userId);
 
             $result = [
                 "earns" => $earns,
                 "membership" => $membership,
-                'user' => $user
+                'user' => $user,
+                "profitPerHour" => $profitPerHour
             ];
 
             return $this->_formatBaseResponse(200, $result, 'Success');
