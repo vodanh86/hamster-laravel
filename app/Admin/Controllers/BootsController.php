@@ -89,7 +89,7 @@ class BootsController extends AdminController
         $form->text('name', __('Name'));
         $form->number('required_money', __('Required money'))->required();
         $form->text('required_short_money', __('Required short money'))->required();
-        $form->image('image', __('Image'));
+        $form->image('image', __('Image'))->move("images/boosts");
         $form->number('level', __('Level'))->required();
         $form->number('value', __('Value'))->required();
         $form->number('order', __('Order'))->required();

@@ -88,7 +88,7 @@ class EarnController extends AdminController
         $form->text('description', __('Description'));
         $form->text('link', __('Link'));
         $form->number('reward', __('Reward'));
-        $form->image('image', __('Image'));
+        $form->image('image', __('Image'))->move("images/earns");
         $form->number('order', __('Order'));
 //        $form->radio('type', __('Type'))->options([1 => 'Active', 0=> 'Deactive'])->default(1);
         return $form;
