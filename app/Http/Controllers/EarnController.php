@@ -65,7 +65,7 @@ class EarnController extends Controller
 
             //TODO: sau them check nhiem vu nua. Hien tai click vao thi auto completed
             $userEarn = UserEarn::findOrFail($userEarnId);
-            $user = new User();
+            $user = User::findOrFail($userId);
             if ($userEarn) {
                 $userEarnStatus = $userEarn->is_completed;
                 $earnId = $userEarn->earn_id;
@@ -86,23 +86,23 @@ class EarnController extends Controller
                     }
 
                     $userEarn->is_completed = 1;
-                    $userEarn->update();
+//                    $userEarn->update();
 
                     //earn
                     $reward = $earn->reward;
                     //cong tien
-                    $user = User::findOrFail($userId);
+
                     if ($user) {
                         $currentRevenue = (int)$user->revenue;
                         $currentHighestScore = $user->highest_score;
                         $newRevenue = $currentRevenue + $reward;
                         if ($newRevenue > $currentHighestScore) {
-                            $user->highest_score = $newRevenue;
+//                            $user->highest_score = $newRevenue;
                         }
-                        $user->revenue = $newRevenue;
+//                        $user->revenue = $newRevenue;
                         //membership
                         $nextMembership = (new UtilsQueryHelper())::findMemebershipByMoney($newRevenue);
-                        $user->membership_id = $nextMembership->id;
+//                        $user->membership_id = $nextMembership->id;
                         $user->update();
 
 
