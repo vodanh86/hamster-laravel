@@ -96,9 +96,12 @@ class ExchangeController extends Controller
 
             $profitPerHour=(new UtilsQueryHelper())::getProfitPerHourByUser($userId);
 
+            $categoryList = (new UtilsQueryHelper())::listCardByUserAndExchange($userId, $exchangeId);
+
             $result =[
                 "exchange" => $exchange,
-                "profitPerHour" => $profitPerHour
+                "profitPerHour" => $profitPerHour,
+                "categoryList" => $categoryList
             ];
 
             return $this->_formatBaseResponse(200, $result, 'Success');
