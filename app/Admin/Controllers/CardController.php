@@ -29,7 +29,7 @@ class CardController extends AdminController
         $grid = new Grid(new Card());
 
         $grid->column('id', __('Id'));
-        $grid->column('category.name', __('Category'));
+        $grid->column('category.name', __('Category'))->filter();
         $grid->column('name', __('Name'));
         $grid->column('description', __('Description'));
         $grid->column('image', __('Image'))->image();
