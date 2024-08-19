@@ -27,9 +27,10 @@ class CardController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Card());
-
+        $categoryOptions = (new UtilsQueryHelper())::getAllCategories()->toArray();
         $grid->column('id', __('Id'));
-        $grid->column('category.name', __('Category'))->filter('like');
+        $grid->column('category.name', __('Category'));
+        $grid->column('category_id', __('Cat id'))->filter($categoryOptions);
         $grid->column('name', __('Name'));
         $grid->column('description', __('Description'));
         $grid->column('image', __('Image'))->image();
