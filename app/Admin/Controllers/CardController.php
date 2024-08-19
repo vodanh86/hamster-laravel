@@ -34,7 +34,7 @@ class CardController extends AdminController
         $grid->column('name', __('Name'));
         $grid->column('description', __('Description'));
         $grid->column('image', __('Image'))->image();
-        $grid->column('order', __('Order'));
+        $grid->column('order', __('Order'))->editable();
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
