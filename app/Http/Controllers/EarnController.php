@@ -86,7 +86,7 @@ class EarnController extends Controller
                     }
 
                     $userEarn->is_completed = 1;
-//                    $userEarn->update();
+                    $userEarn->update();
 
                     //earn
                     $reward = $earn->reward;
@@ -97,12 +97,12 @@ class EarnController extends Controller
                         $currentHighestScore = $user->highest_score;
                         $newRevenue = $currentRevenue + $reward;
                         if ($newRevenue > $currentHighestScore) {
-//                            $user->highest_score = $newRevenue;
+                            $user->highest_score = $newRevenue;
                         }
-//                        $user->revenue = $newRevenue;
+                        $user->revenue = $newRevenue;
                         //membership
                         $nextMembership = (new UtilsQueryHelper())::findMemebershipByMoney($newRevenue);
-//                        $user->membership_id = $nextMembership->id;
+                        $user->membership_id = $nextMembership->id;
                         $user->update();
 
 
@@ -110,6 +110,8 @@ class EarnController extends Controller
                         return $this->_formatBaseResponse(400, null, 'User not found');
                     }
                 }
+//                $userEarn->update();
+
             } else {
                 return $this->_formatBaseResponse(400, null, 'User Earn not found');
             }
