@@ -241,6 +241,7 @@ class UtilsQueryHelper
 
                 $maxLevel = $maxLevelByCard->get($card->id, null);
 
+                //Todo: add required_card here
                 foreach ($cardProfits as $index => $cardProfit) {
                     $cardProfitArray = $cardProfit->toArray();
 
@@ -249,6 +250,14 @@ class UtilsQueryHelper
                     } else {
                         $cardProfitArray['is_purchased'] = false;
                     }
+
+                    if ($cardProfit->required_card) {
+                        $requiredCardProfit = CardProfit::find($cardProfit->required_card);
+                        if ($requiredCardProfit) {
+                            $cardProfitArray['required_card'] = $requiredCardProfit->toArray();
+                        }
+                    }
+
 
                     if ($index < $cardProfits->count() - 1) {
                         $nextLevelProfit = $cardProfits[$index + 1];
