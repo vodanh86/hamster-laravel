@@ -251,10 +251,19 @@ class UtilsQueryHelper
                         $cardProfitArray['is_purchased'] = false;
                     }
 
+//                    if ($cardProfit->required_card) {
+//                        $requiredCardProfit = CardProfit::find($cardProfit->required_card);
+//                        if ($requiredCardProfit) {
+//                            $cardProfitArray['required_card'] = $requiredCardProfit->toArray();
+//                        }
+//                    }
                     if ($cardProfit->required_card) {
-                        $requiredCardProfit = CardProfit::find($cardProfit->required_card);
+                        $requiredCardProfit = CardProfit::with('card')->find($cardProfit->required_card);
                         if ($requiredCardProfit) {
-                            $cardProfitArray['required_card'] = $requiredCardProfit->toArray();
+                            $requiredCardProfitArray = $requiredCardProfit->toArray();
+                            $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
+                            unset($requiredCardProfitArray['card']); // Remove the 'card' object to avoid redundancy
+                            $cardProfitArray['required_card'] = $requiredCardProfitArray;
                         }
                     }
 
