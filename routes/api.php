@@ -45,6 +45,7 @@ Route::post('memberships/get-by-user', [MembershipController::class, 'getByUser'
 
 //skins
 Route::get('skins', [SkinController::class, 'index']);
+Route::post('user-skin/buy-skin', [SkinController::class, 'buySkin']);
 
 //profit per hour
 Route::get('profit-per-hours', [ProfitPerHourController::class, 'index']);

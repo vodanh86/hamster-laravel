@@ -10,6 +10,7 @@ use App\Models\Earn;
 use App\Models\Exchange;
 use App\Models\Membership;
 use App\Models\ProfitPerHour;
+use App\Models\Skin;
 use App\Models\User;
 use App\Models\UserEarn;
 use Illuminate\Support\Collection;
@@ -374,5 +375,17 @@ class UtilsQueryHelper
             return $result;
         }
         return null;
+    }
+
+
+    public static function getSkinByUser($userId)
+    {
+        $user=User::findOrFail($userId);
+        $skin=$user->skin_id;
+        if($skin === -1){
+            return null;
+        }else{
+            return Skin::findOrFail($skin);
+        }
     }
 }

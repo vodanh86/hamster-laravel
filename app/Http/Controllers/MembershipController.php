@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\MembershipValidator;
 use App\Models\Category;
 use App\Models\ProfitPerHour;
@@ -57,6 +58,7 @@ class MembershipController extends Controller
                 $maxLevel = $maxMembership->level;
 
                 $result = [
+                    "skin" =>(new UtilsQueryHelper())::getSkinByUser($userId),
                     "membership" => $membership,
                     "current_level" => $membership->level,
                     "max_level" => $maxLevel,
