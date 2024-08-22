@@ -6,6 +6,8 @@ use App\Models\Card;
 use App\Models\Category;
 use App\Models\Earn;
 use App\Models\Skin;
+use App\Models\User;
+use App\Models\UserEarn;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -90,7 +92,26 @@ class EarnController extends AdminController
         $form->number('reward', __('Reward'));
         $form->image('image', __('Image'))->move("images/earns");
         $form->number('order', __('Order'));
-//        $form->radio('type', __('Type'))->options([1 => 'Active', 0=> 'Deactive'])->default(1);
+
+        if (!$form->isEditing()) {
+           //insert form
+            $form->saved(function ($form){
+                $id=$form->model()->id ;
+                $users=(new UtilsQueryHelper())::getAllUsers();
+                if(count($users)!==0) {
+                    foreach ($users as $user) {
+                        $userEarn=new UserEarn();
+                        $userEarn->user_id=$user->id;
+                        $userEarn->earn_id=$id;
+                        $userEarn->is_completed = ConstantHelper::STATUS_IN_ACTIVE;
+
+                        $userEarn->save();
+                    }
+                }
+            });
+        }
+
+
         return $form;
     }
 }

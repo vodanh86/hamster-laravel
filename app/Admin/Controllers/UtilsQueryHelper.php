@@ -25,6 +25,11 @@ class UtilsQueryHelper
             ->first();
     }
 
+    public static function getAllUsers()
+    {
+        return User::all();
+    }
+
     public static function getAllCategories(): Collection
     {
         return Category::all()->pluck('name', 'id');
