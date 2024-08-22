@@ -68,20 +68,12 @@ class BootsController extends Controller
 
             $currentUserBoots = UserBoots::findOrFail($currentUserBootsId);
             $nextUserBoots = UserBoots::findOrFail($nextUserBootsId);
-//            error_log('current and next USER BOOTS');
-//            error_log(json_encode($currentUserBoots));
-//            error_log(json_encode($nextUserBoots));
             $currentBoots=Boots::findOrFail($currentUserBoots->boots_id);
             $nextBoots=Boots::findOrFail($nextUserBoots->boots_id);
-//            error_log('current and next  ');
-//            error_log(json_encode($currentBoots));
-//            error_log(json_encode($nextBoots));
 
             //FREE OR FEE
 
             $user = User::findOrFail($userId);
-//            $currentMultiTap = $user->tap_value;
-
 
             if ($type === ConstantHelper::BOOTS_TYPE_FREE) {
                 $currentUserBoots->is_completed = false;
@@ -89,16 +81,15 @@ class BootsController extends Controller
             } elseif ($type === ConstantHelper::BOOTS_TYPE_FEE) {
 
                 $requiredMoney = $nextBoots->required_money;
-//                error_log('requiredMoney: ' . $requiredMoney);
                 //tru revenue
                 $user->revenue -= $requiredMoney;
-//                error_log('new revenue:'. $user->revenue);
-                $increaseValue = ($nextBoots->value) - ($currentBoots->value);
+                $increaseValue = $nextBoots->value;
                 if ($subType === ConstantHelper::BOOTS_SUBTYPE_MULTI_TAP) {
                     $user->tap_value += $increaseValue;
 //                    error_log('tap new: ' . $user->tap_value);
                 }
                 if ($subType === ConstantHelper::BOOTS_SUBTYPE_ENERGY_LIMIT) {
+                    error_log(  $user->energy_limit);
                     $user->energy_limit += $increaseValue;
                 }
 

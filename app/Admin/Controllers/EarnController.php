@@ -111,7 +111,6 @@ class EarnController extends AdminController
             });
         }
 
-
         return $form;
     }
 }
