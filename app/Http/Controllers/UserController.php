@@ -87,7 +87,7 @@ class UserController extends Controller
                 $user->telegram_id = $telegram_id;
                 $user->first_name = $dataInput["first_name"];
                 $user->last_name = $dataInput["last_name"];
-                $user->username = $dataInput["username"];
+                $user->username = $dataInput["username"]??null;
                 $user->language_code = $dataInput["language_code"];
                 $user->revenue = 0;
                 $user->highest_score = 0;

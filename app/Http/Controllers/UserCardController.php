@@ -62,18 +62,25 @@ class UserCardController extends Controller
 
             //next level
             $nextCardProfit = (new UtilsQueryHelper())::findCardProfitByCardAndLevel($cardId, $cardlevel);
+            error_log("nextCardProfit");
+            error_log(json_encode($nextCardProfit));
             if (!$nextCardProfit) {
                 return $this->_formatBaseResponse(400, null, 'Card and Level is not exist!');
             }
             //kiem tra xem user co du tien mua card ko
             $nextProfitRequiredMoney = $nextCardProfit->required_money;
+
+            error_log("nextProfitRequiredMoney: " . $nextProfitRequiredMoney);
             if ($currentRevenue < $nextProfitRequiredMoney) {
                 return $this->_formatBaseResponse(400, null, 'Not enough money to buy card.');
             }
 
             //TODO: recheck profit per hour
             $nextProfit = $nextCardProfit->profit;
+            error_log("nextProfit: " . $nextProfit);
             $increaseProfit = $nextProfit - $currentProfit;
+            error_log("increaseProfit: " . $increaseProfit);
+
 
             $userCard = new UserCard();
             $userCard->user_id = $userId;
@@ -109,7 +116,7 @@ class UserCardController extends Controller
             $updatedUser = [
                 'profitPerHour' => $profitPerHour,
                 'revenue' => $user->revenue,
-                'membership'=>$membership
+                'membership' => $membership
             ];
 
 
