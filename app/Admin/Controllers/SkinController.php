@@ -71,7 +71,10 @@ class SkinController extends AdminController
 
         $form->text('name', __('Name'));
         $form->text('description', __('Description'));
-        $form->image('image', __('Image'))->move("images/skin");
+//        $form->image('image', __('Image'))->move("images/skin");
+        $form->image('image', __('Image'))->move("images/skin")->thumbnail([
+            'small' => [150, 150],
+        ]);
         $form->number('price', __('Price'));
         $form->number('required_level', __('Required level'));
 

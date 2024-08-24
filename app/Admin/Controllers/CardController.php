@@ -87,7 +87,12 @@ class CardController extends AdminController
 
         $form->text('name', __('Name'));
         $form->text('description', __('Description'));
-        $form->image('image', __('Image'))->move("images/cards");
+//        $form->image('image', __('Image'))->move("images/cards");
+        $form->image('image', __('Image'))->thumbnail([
+//            'small' => [30, 30],
+            'small' => [40, 40],
+//            'small' => [100, 100],
+        ]);
         $form->number('order', __('Order'));
 
         return $form;

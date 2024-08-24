@@ -71,6 +71,7 @@ class UserCardController extends Controller
                 return $this->_formatBaseResponse(400, null, 'Not enough money to buy card.');
             }
 
+            //TODO: recheck profit per hour
             $nextProfit = $nextCardProfit->profit;
             $increaseProfit = $nextProfit - $currentProfit;
 
@@ -80,13 +81,14 @@ class UserCardController extends Controller
             $userCard->level = $cardlevel;
             $userCard->card_profit_id = $cardProfitId;
             $userCard->exchange_id = $exchangeId;
-//
+
 //            //level
             $userCard->created_at = now()->toDateTime();
             $userCard->save();
 
             //update profit per hour
             $profitPerHour = (new UtilsQueryHelper())::findProfitPerHourByUserAndExchange($userId, $exchangeId);
+            error_log(json_encode($profitPerHour));
             if (!$profitPerHour) {
                 return $this->_formatBaseResponse(400, null, 'Exchange is not active!');
             }
@@ -95,12 +97,10 @@ class UserCardController extends Controller
             $profitPerHour->profit_per_hour = $nextProfitPerHour;
             $profitPerHour->update();
 
-
             //update revenue
             $newRevenue = $currentRevenue - $nextProfitRequiredMoney;
             $user->revenue = $newRevenue;
             $user->update();
-
 
             $categoryList = (new UtilsQueryHelper())::listCardByUserAndExchange($userId, $exchangeId);
 
