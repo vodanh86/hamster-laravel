@@ -226,7 +226,8 @@ class UtilsQueryHelper
 
         $cardList = Card::with(['cardProfits' => function ($query) {
             $query->orderBy('level', 'asc');
-        }])->get();
+        }])->orderBy('order', 'asc')
+            ->get();
 
         $purchasedCardProfits = CardProfit::join('user_card', 'card_profit.id', '=', 'user_card.card_profit_id')
             ->where('user_card.user_id', $userId)
@@ -247,7 +248,6 @@ class UtilsQueryHelper
 
                 $maxLevel = $maxLevelByCard->get($card->id, null);
 
-                //Todo: add required_card here
                 foreach ($cardProfits as $index => $cardProfit) {
                     $cardProfitArray = $cardProfit->toArray();
 
@@ -257,18 +257,12 @@ class UtilsQueryHelper
                         $cardProfitArray['is_purchased'] = false;
                     }
 
-//                    if ($cardProfit->required_card) {
-//                        $requiredCardProfit = CardProfit::find($cardProfit->required_card);
-//                        if ($requiredCardProfit) {
-//                            $cardProfitArray['required_card'] = $requiredCardProfit->toArray();
-//                        }
-//                    }
                     if ($cardProfit->required_card) {
                         $requiredCardProfit = CardProfit::with('card')->find($cardProfit->required_card);
                         if ($requiredCardProfit) {
                             $requiredCardProfitArray = $requiredCardProfit->toArray();
                             $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
-                            unset($requiredCardProfitArray['card']); // Remove the 'card' object to avoid redundancy
+                            unset($requiredCardProfitArray['card']);
                             $cardProfitArray['required_card'] = $requiredCardProfitArray;
                         }
                     }
