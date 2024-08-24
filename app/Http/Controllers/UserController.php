@@ -11,6 +11,7 @@ use App\Models\Skin;
 use App\Models\UserBoots;
 use App\Models\UserEarn;
 use App\Models\UserFriend;
+use App\Models\UserSkin;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
 use App\Models\User;
@@ -166,6 +167,17 @@ class UserController extends Controller
                     $userBoots->save();
                 }
 
+
+                //add skin
+                $skins=(new UtilsQueryHelper())::getAllSkins();
+                foreach ($skins as $skin) {
+                    $userSkin = new UserSkin();
+                    $userSkin->user_id = $user->id;
+                    $userSkin->skin_id = $skin->id;
+                    $userSkin->is_purchased = ConstantHelper::STATUS_IN_ACTIVE;
+                    $userSkin->save();
+                }
+
 //                $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
 
             }
@@ -174,6 +186,7 @@ class UserController extends Controller
 //            $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
 
             $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
+            $user->userSkins=(new UtilsQueryHelper())::getSkinsBoughtByUser($userId);
 
             return $this->_formatBaseResponse(201, $user, 'Success');
         } catch (ValidationException $e) {

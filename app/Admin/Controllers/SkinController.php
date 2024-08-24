@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Skin;
+use App\Models\UserEarn;
+use App\Models\UserSkin;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -68,7 +70,10 @@ class SkinController extends AdminController
     protected function form()
     {
         $form = new Form(new Skin());
+        if ($form->isEditing()) {
+            $id = request()->route()->parameter('skin');
 
+        }
         $form->text('name', __('Name'));
         $form->text('description', __('Description'));
 //        $form->image('image', __('Image'))->move("images/skin");
@@ -78,6 +83,22 @@ class SkinController extends AdminController
         $form->number('price', __('Price'));
         $form->number('required_level', __('Required level'));
 
+        if (!$form->isEditing()) {
+            //insert form
+            $form->saved(function ($form){
+                $id=$form->model()->id ;
+                $users=(new UtilsQueryHelper())::getAllUsers();
+                if(count($users)!==0) {
+                    foreach ($users as $user) {
+                        $userSkin = new UserSkin();
+                        $userSkin->user_id = $user->id;
+                        $userSkin->skin_id = $id;
+                        $userSkin->is_purchased = ConstantHelper::STATUS_IN_ACTIVE;
+                        $userSkin->save();
+                    }
+                }
+            });
+        }
         return $form;
     }
 }

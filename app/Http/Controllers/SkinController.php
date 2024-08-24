@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Controllers\ConstantHelper;
 use App\Admin\Controllers\UtilsQueryHelper;
 use App\Http\Validators\SkinValidator;
 use App\Models\User;
+use App\Models\UserSkin;
 use App\Traits\ResponseFormattingTrait;
 use Carbon\Carbon;
 use App\Models\Skin;
@@ -68,12 +70,26 @@ class SkinController extends Controller
 
                 //TODO: Sau them bang User-Skin
 
-                //update revenue
-                $newRevenue = $currentRevenue - $requiredPrice;
-                $user->revenue = $newRevenue;
-                $user->skin_id = $skinId;
+                //find user skin by user and skin
+                $userSkin = UserSkin::all()->where('user_id','=',$user->id)
+                    ->where('skin_id','=',$skinId)
+                    ->first();
 
-                $newSkin=$nextSkin;
+                if($userSkin){
+                    if($userSkin->is_purchased === ConstantHelper::STATUS_ACTIVE){
+                        return $this->_formatBaseResponse(400, null, 'You bought this before.');
+                    }else{
+                        $userSkin->is_purchased = ConstantHelper::STATUS_ACTIVE;
+                        $userSkin->update();
+
+                        //update revenue
+                        $newRevenue = $currentRevenue - $requiredPrice;
+                        $user->revenue = $newRevenue;
+                        $user->skin_id = $skinId;
+
+                        $newSkin=$nextSkin;
+                    }
+                }
             }
 
             $user->update();

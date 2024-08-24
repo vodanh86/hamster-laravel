@@ -13,6 +13,7 @@ use App\Models\ProfitPerHour;
 use App\Models\Skin;
 use App\Models\User;
 use App\Models\UserEarn;
+use App\Models\UserSkin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -29,6 +30,12 @@ class UtilsQueryHelper
     {
         return User::all();
     }
+
+    public static function getAllSkins()
+    {
+        return Skin::all();
+    }
+
 
     public static function getAllCategories(): Collection
     {
@@ -386,5 +393,10 @@ class UtilsQueryHelper
         }else{
             return Skin::findOrFail($skin);
         }
+    }
+
+    public static function getSkinsBoughtByUser($userId)
+    {
+        return UserSkin::where('user_id','=',$userId)->get();
     }
 }
