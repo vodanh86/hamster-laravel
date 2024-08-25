@@ -89,7 +89,7 @@ class BootsController extends Controller
 //                    error_log('tap new: ' . $user->tap_value);
                 }
                 if ($subType === ConstantHelper::BOOTS_SUBTYPE_ENERGY_LIMIT) {
-                    error_log(  $user->energy_limit);
+//                    error_log(  $user->energy_limit);
                     $user->energy_limit += $increaseValue;
                 }
 

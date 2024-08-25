@@ -12,6 +12,7 @@ use App\Models\Membership;
 use App\Models\ProfitPerHour;
 use App\Models\Skin;
 use App\Models\User;
+use App\Models\UserCard;
 use App\Models\UserEarn;
 use App\Models\UserSkin;
 use Illuminate\Support\Collection;
@@ -95,7 +96,7 @@ class UtilsQueryHelper
 
     public static function getEarnByUser($userId)
     {
-     //   TODO: CHECK them chi lay nhung earn ACTIVE
+        //   TODO: CHECK them chi lay nhung earn ACTIVE
         $data = DB::table('user_earn as ue')
             ->join('earn as ea', 'ea.id', '=', 'ue.earn_id')
             ->where('ue.user_id', '=', $userId)
@@ -267,11 +268,23 @@ class UtilsQueryHelper
 
                     if ($cardProfit->required_card) {
                         $requiredCardProfit = CardProfit::with('card')->find($cardProfit->required_card);
+
+                        //check in user-card
+                        $userCardBought = UserCard::where('user_id', '=', $userId)
+                            ->where('exchange_id', '=', $exchangeId)
+                            ->where('card_id', '=', $requiredCardProfit->card_id)
+                            ->where('card_profit_id', '=', $requiredCardProfit->card_profit_id)
+                            ->get();
+
                         if ($requiredCardProfit) {
-                            $requiredCardProfitArray = $requiredCardProfit->toArray();
-                            $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
-                            unset($requiredCardProfitArray['card']);
-                            $cardProfitArray['required_card'] = $requiredCardProfitArray;
+                            if (!$userCardBought) {
+                                $requiredCardProfitArray = $requiredCardProfit->toArray();
+                                $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
+                                unset($requiredCardProfitArray['card']);
+                                $cardProfitArray['required_card'] = $requiredCardProfitArray;
+                            }else {
+                                $cardProfitArray['required_card'] = null;
+                            }
                         }
                     }
 
@@ -387,17 +400,17 @@ class UtilsQueryHelper
 
     public static function getSkinByUser($userId)
     {
-        $user=User::findOrFail($userId);
-        $skin=$user->skin_id;
-        if($skin === -1){
+        $user = User::findOrFail($userId);
+        $skin = $user->skin_id;
+        if ($skin === -1) {
             return null;
-        }else{
+        } else {
             return Skin::findOrFail($skin);
         }
     }
 
     public static function getSkinsBoughtByUser($userId)
     {
-        return UserSkin::where('user_id','=',$userId)->get();
+        return UserSkin::where('user_id', '=', $userId)->get();
     }
 }
