@@ -85,7 +85,7 @@ class BootsController extends Controller
                 $user->revenue -= $requiredMoney;
                 $increaseValue = $nextBoots->value;
                 if ($subType === ConstantHelper::BOOTS_SUBTYPE_MULTI_TAP) {
-                    $user->tap_value += $increaseValue;
+                    $user->tap_value = $increaseValue;
 //                    error_log('tap new: ' . $user->tap_value);
                 }
                 if ($subType === ConstantHelper::BOOTS_SUBTYPE_ENERGY_LIMIT) {

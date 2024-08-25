@@ -92,6 +92,8 @@ class EarnController extends AdminController
         $form->number('reward', __('Reward'));
         $form->image('image', __('Image'))->move("images/earns");
         $form->number('order', __('Order'));
+//        $form->select('status', __('Trạng thái'))->options($statusOptions)->default($statusDefault)->required();
+//        $form->radio('status', __('Trạng thái'))->options([1 => 'Active', 0 => 'InActive'])->required();
 
         if (!$form->isEditing()) {
            //insert form
