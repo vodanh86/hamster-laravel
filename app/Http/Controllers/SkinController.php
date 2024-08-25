@@ -52,7 +52,7 @@ class SkinController extends Controller
             $currentSkin = Skin::findOrFail($user->skin_id);
             $newSkin=null;
 
-            //TODO: Check if skinId=-1
+            // Check if skinId=-1
             if ($skinId === -1) {
                 //ko dung skin
                 $user->skin_id = -1;
@@ -67,8 +67,6 @@ class SkinController extends Controller
                 if ($currentRevenue < $requiredPrice) {
                     return $this->_formatBaseResponse(400, null, 'Not enough money to buy skin.');
                 }
-
-                //TODO: Sau them bang User-Skin
 
                 //find user skin by user and skin
                 $userSkin = UserSkin::all()->where('user_id','=',$user->id)

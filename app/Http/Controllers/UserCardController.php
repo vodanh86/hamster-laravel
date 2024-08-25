@@ -72,7 +72,6 @@ class UserCardController extends Controller
                 return $this->_formatBaseResponse(400, null, 'Not enough money to buy card.');
             }
 
-            //TODO: recheck profit per hour
             $nextProfit = $nextCardProfit->profit;
             $increaseProfit = $nextProfit - $currentProfit;
 

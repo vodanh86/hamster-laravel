@@ -238,7 +238,6 @@ class UserController extends Controller
                 ];
 
                 //update membership
-                //TODO: check xem next membership
                 $membership = Membership::findOrFail($user->membership_id);
                 $nextMembership = (new UtilsQueryHelper())::findNextMemebership($membership->level);
                 $nextMembershipMoney = $nextMembership->money;
@@ -286,16 +285,26 @@ class UserController extends Controller
                     return $this->_formatBaseResponse(400, null, 'Cannot buy current skin again.');
                 }
 
-                //get current revenue
-                $currentRevenue = (int)$user->revenue;
-                if ($currentRevenue < $skinPrice) {
-                    return $this->_formatBaseResponse(400, null, 'Revenue is not enough to buy this skin.');
-                }
+                $userSkin=(new UtilsQueryHelper())::getSkinsBoughtByUser($userId);
+                if ($userSkin){
+                    if($userSkin->is_purchased ===ConstantHelper::STATUS_ACTIVE){
+                        return $this->_formatBaseResponse(400, null, 'You already bought this skin');
+                    }else{
+                        //get current revenue
+                        $currentRevenue = (int)$user->revenue;
+                        if ($currentRevenue < $skinPrice) {
+                            return $this->_formatBaseResponse(400, null, 'Revenue is not enough to buy this skin.');
+                        }
 
-                //buy the skin
-                $user->skin_id = $skinId;
-                $user->revenue = $currentRevenue - $skinPrice;
-                $user->update();
+                        //buy the skin
+                        $user->skin_id = $skinId;
+                        $user->revenue = $currentRevenue - $skinPrice;
+                        $user->update();
+
+                        $userSkin->is_purchased = ConstantHelper::STATUS_ACTIVE;
+                        $userSkin->update();
+                    }
+                }
             }
 
             $result = [

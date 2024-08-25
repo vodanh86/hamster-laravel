@@ -95,6 +95,7 @@ class UtilsQueryHelper
 
     public static function getEarnByUser($userId)
     {
+     //   TODO: CHECK them chi lay nhung earn ACTIVE
         $data = DB::table('user_earn as ue')
             ->join('earn as ea', 'ea.id', '=', 'ue.earn_id')
             ->where('ue.user_id', '=', $userId)
