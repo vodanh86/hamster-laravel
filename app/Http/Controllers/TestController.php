@@ -10,6 +10,7 @@ use App\Models\CardProfit;
 use App\Models\Category;
 use App\Models\Membership;
 use App\Models\User;
+use App\Models\UserBoots;
 use App\Models\UserCard;
 use App\Models\UserSkin;
 use App\Traits\ResponseFormattingTrait;
@@ -26,19 +27,27 @@ class TestController extends Controller
     public function testMethod()
     {
         //user-skin
-        $users = (new UtilsQueryHelper())::getAllUsers();
-        foreach ($users as $user) {
-            $skins=(new UtilsQueryHelper())::getAllSkins();
-            foreach ($skins as $skin) {
-                $userEarn = new UserSkin();
-                $userEarn->user_id = $user->id;
-                $userEarn->skin_id = $skin->id;
-                $userEarn->is_purchased = ConstantHelper::STATUS_IN_ACTIVE;
-                $userEarn->save();
-            }
+//        $users = (new UtilsQueryHelper())::getAllUsers();
+//        foreach ($users as $user) {
+//            $boots=(new UtilsQueryHelper())::getAllBoots();
+//            foreach ($boots as $boot) {
+////                error_log(json_encode($user));
+//                $userBoot=UserCard::where('user_id','=',$user->id) ->where('boots_id','=',$boot->id)->first();
+////                error_log(json_encode($userBoot));
+//                if(is_null($userBoot)){
+//                    $userBoot = new UserBoots();
+//                    $userBoot->user_id = $user->id;
+//                    $userBoot->boots_id = $boot->id;
+//                    $userBoot->is_completed = 0;
+//                    $userBoot->save();
+//                }
+//
+//
+//            }
 
-        }
-        return (new UtilsQueryHelper())::findMemberShipByUser(1);
+
+//        }
+        return (new UtilsQueryHelper())::listCardByUserAndExchange(23,51);
     }
 
 }

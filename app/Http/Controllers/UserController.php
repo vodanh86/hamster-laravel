@@ -88,7 +88,7 @@ class UserController extends Controller
                 $user->telegram_id = $telegram_id;
                 $user->first_name = $dataInput["first_name"];
                 $user->last_name = $dataInput["last_name"];
-                $user->username = $dataInput["username"]??null;
+                $user->username = $dataInput["username"] ?? null;
                 $user->language_code = $dataInput["language_code"];
                 $user->revenue = 0;
                 $user->highest_score = 0;
@@ -162,14 +162,18 @@ class UserController extends Controller
                     $userBoots = new UserBoots();
                     $userBoots->user_id = $userId;
                     $userBoots->boots_id = $boots[$k]->id;
-                    $userBoots->is_completed = ConstantHelper::STATUS_IN_ACTIVE;
+                    if ($boots[$k]->level === 0) {
+                        $userBoots->is_completed = ConstantHelper::STATUS_ACTIVE;
+                    } else {
+                        $userBoots->is_completed = ConstantHelper::STATUS_IN_ACTIVE;
+                    }
 
                     $userBoots->save();
                 }
 
 
                 //add skin
-                $skins=(new UtilsQueryHelper())::getAllSkins();
+                $skins = (new UtilsQueryHelper())::getAllSkins();
                 foreach ($skins as $skin) {
                     $userSkin = new UserSkin();
                     $userSkin->user_id = $user->id;
@@ -186,7 +190,7 @@ class UserController extends Controller
 //            $user->earns = (new UtilsQueryHelper())::getEarnByUser($userId);
 
             $user->boots = (new UtilsQueryHelper())::getBootsByUser($userId);
-            $user->userSkins=(new UtilsQueryHelper())::getSkinsBoughtByUser($userId);
+            $user->userSkins = (new UtilsQueryHelper())::getSkinsBoughtByUser($userId);
 
             return $this->_formatBaseResponse(201, $user, 'Success');
         } catch (ValidationException $e) {
@@ -285,11 +289,11 @@ class UserController extends Controller
                     return $this->_formatBaseResponse(400, null, 'Cannot buy current skin again.');
                 }
 
-                $userSkin=(new UtilsQueryHelper())::getSkinsBoughtByUser($userId);
-                if ($userSkin){
-                    if($userSkin->is_purchased ===ConstantHelper::STATUS_ACTIVE){
+                $userSkin = (new UtilsQueryHelper())::getSkinsBoughtByUser($userId);
+                if ($userSkin) {
+                    if ($userSkin->is_purchased === ConstantHelper::STATUS_ACTIVE) {
                         return $this->_formatBaseResponse(400, null, 'You already bought this skin');
-                    }else{
+                    } else {
                         //get current revenue
                         $currentRevenue = (int)$user->revenue;
                         if ($currentRevenue < $skinPrice) {

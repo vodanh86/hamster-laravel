@@ -277,15 +277,17 @@ class UtilsQueryHelper
                             ->get();
 
                         if ($requiredCardProfit) {
-                            if (!$userCardBought) {
+                            if ($userCardBought) {
+                                $cardProfitArray['required_card'] = null;
+                            } else {
                                 $requiredCardProfitArray = $requiredCardProfit->toArray();
                                 $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
                                 unset($requiredCardProfitArray['card']);
                                 $cardProfitArray['required_card'] = $requiredCardProfitArray;
-                            }else {
-                                $cardProfitArray['required_card'] = null;
                             }
                         }
+
+
                     }
 
 
