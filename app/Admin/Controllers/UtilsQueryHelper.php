@@ -268,25 +268,29 @@ class UtilsQueryHelper
 
                     if ($cardProfit->required_card) {
                         $requiredCardProfit = CardProfit::with('card')->find($cardProfit->required_card);
-
-                        //check in user-card
-                        $userCardBought = UserCard::where('user_id', '=', $userId)
-                            ->where('exchange_id', '=', $exchangeId)
-                            ->where('card_id', '=', $requiredCardProfit->card_id)
-                            ->where('card_profit_id', '=', $requiredCardProfit->card_profit_id)
-                            ->get();
-
-                        if ($requiredCardProfit) {
-                            if ($userCardBought) {
-                                $cardProfitArray['required_card'] = null;
-                            } else {
-                                $requiredCardProfitArray = $requiredCardProfit->toArray();
-                                $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
-                                unset($requiredCardProfitArray['card']);
-                                $cardProfitArray['required_card'] = $requiredCardProfitArray;
-                            }
-                        }
-
+//                        //check in user-card
+//                        $userCardBought = UserCard::where('user_id', '=', $userId)
+//                            ->where('exchange_id', '=', $exchangeId)
+//                            ->where('card_id', '=', $requiredCardProfit->card_id)
+//                            ->where('card_profit_id', '=', $requiredCardProfit->card_profit_id)
+//                            ->get();
+//
+//                        if ($requiredCardProfit) {
+//
+//                            $requiredCardProfitArray = $requiredCardProfit->toArray();
+//                            $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
+//                            $countIsBought = count($userCardBought);
+//                            $requiredCardProfitArray['is_bought'] = 0;
+//                            if ($countIsBought !== 0) {
+//                                $requiredCardProfitArray['is_bought'] = 1;
+//                            }
+//                            unset($requiredCardProfitArray['card']);
+//                            $cardProfitArray['required_card'] = $requiredCardProfitArray;
+//                        }
+                        $requiredCardProfitArray = $requiredCardProfit->toArray();
+                        $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
+                        unset($requiredCardProfitArray['card']);
+                        $cardProfitArray['required_card'] = $requiredCardProfitArray;
 
                     }
 

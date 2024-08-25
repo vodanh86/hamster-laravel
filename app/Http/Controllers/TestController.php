@@ -47,7 +47,7 @@ class TestController extends Controller
 
 
 //        }
-        return (new UtilsQueryHelper())::listCardByUserAndExchange(23,51);
+        return (new UtilsQueryHelper())::listCardByUserAndExchange(31,51);
     }
 
 }
