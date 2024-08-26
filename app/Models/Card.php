@@ -23,6 +23,7 @@ class Card extends Model
         return $this->hasMany(CardProfit::class, 'card_id');
     }
 
+
     protected $appends = [];
 
     protected $guarded = [];

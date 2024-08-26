@@ -244,17 +244,16 @@ class UserController extends Controller
                 //update membership
                 $membership = Membership::findOrFail($user->membership_id);
                 $nextMembership = (new UtilsQueryHelper())::findNextMemebership($membership->level);
-                $nextMembershipMoney = $nextMembership->money;
-                if ($currentHighestScore >= $nextMembershipMoney) {
-                    $user->membership_id = $nextMembership->id;
-                    $user->update();
+                if (!$nextMembership) {
+                    $nextMembershipMoney = $nextMembership->money;
+                    if ($currentHighestScore >= $nextMembershipMoney) {
+                        $user->membership_id = $nextMembership->id;
+                        $user->update();
+                    }
                 }
-
                 return $this->_formatBaseResponse(200, $result, 'Success');
-            } else {
-                return $this->_formatBaseResponse(400, null, 'Failed');
             }
-
+            return $this->_formatBaseResponse(400, null, 'Failed');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->toArray();
             return $this->_formatBaseResponse(400, $errors, 'Failed');

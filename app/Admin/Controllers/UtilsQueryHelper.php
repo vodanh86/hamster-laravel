@@ -266,32 +266,24 @@ class UtilsQueryHelper
                         $cardProfitArray['is_purchased'] = false;
                     }
 
+                    //check required_card here
                     if ($cardProfit->required_card) {
                         $requiredCardProfit = CardProfit::with('card')->find($cardProfit->required_card);
-//                        //check in user-card
-//                        $userCardBought = UserCard::where('user_id', '=', $userId)
-//                            ->where('exchange_id', '=', $exchangeId)
-//                            ->where('card_id', '=', $requiredCardProfit->card_id)
-//                            ->where('card_profit_id', '=', $requiredCardProfit->card_profit_id)
-//                            ->get();
-//
-//                        if ($requiredCardProfit) {
-//
-//                            $requiredCardProfitArray = $requiredCardProfit->toArray();
-//                            $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
-//                            $countIsBought = count($userCardBought);
-//                            $requiredCardProfitArray['is_bought'] = 0;
-//                            if ($countIsBought !== 0) {
-//                                $requiredCardProfitArray['is_bought'] = 1;
-//                            }
-//                            unset($requiredCardProfitArray['card']);
-//                            $cardProfitArray['required_card'] = $requiredCardProfitArray;
-//                        }
+
+                        // Check if the user has bought the required card profit
+                        $userCardBought = UserCard::where('user_id', '=', $userId)
+                            ->where('exchange_id', '=', $exchangeId)
+                            ->where('card_profit_id', '=', $requiredCardProfit->id)
+                            ->exists();
+
+                        error_log('User card da mua: ' . json_encode($userCardBought));
+
                         $requiredCardProfitArray = $requiredCardProfit->toArray();
                         $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
+                        $requiredCardProfitArray['is_bought'] = $userCardBought ? 1 : 0;
                         unset($requiredCardProfitArray['card']);
-                        $cardProfitArray['required_card'] = $requiredCardProfitArray;
 
+                        $cardProfitArray['required_card'] = $requiredCardProfitArray;
                     }
 
 
@@ -315,6 +307,67 @@ class UtilsQueryHelper
 
         return $categoryList;
     }
+
+//    public static function listCardByUserAndExchange($userId, $exchangeId)
+//    {
+//        // Get all categories
+//        $categoryList = Category::with(['cards.cardProfits' => function ($query) {
+//            $query->orderBy('level', 'asc');
+//        }])->get();
+//
+//        // Get purchased card profits for the user and exchange
+//        $purchasedCardProfits = UserCard::where('user_id', $userId)
+//            ->where('exchange_id', $exchangeId)
+//            ->pluck('card_profit_id')
+//            ->toArray();
+//
+//        foreach ($categoryList as $category) {
+//            foreach ($category->cards as $card) {
+//                foreach ($card->cardProfits as $index => $cardProfit) {
+//                    $cardProfitArray = $cardProfit->toArray();
+//
+//                    // Check if the cardProfit is purchased
+//                    $cardProfitArray['is_purchased'] = in_array($cardProfit->id, $purchasedCardProfits);
+//
+//                    // Check required_card here
+//                    if ($cardProfit->required_card) {
+//                        $requiredCardProfit = CardProfit::with('card')->find($cardProfit->required_card);
+//
+//                        if ($requiredCardProfit) {
+//                            $userCardBought = in_array($requiredCardProfit->id, $purchasedCardProfits);
+//
+//                            $requiredCardProfitArray = $requiredCardProfit->toArray();
+//                            $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
+//                            $requiredCardProfitArray['is_bought'] = $userCardBought ? 1 : 0;
+//
+//                            unset($requiredCardProfitArray['card']);
+//                            $cardProfitArray['required_card'] = $requiredCardProfitArray;
+//                        }
+//                    }
+//
+//                    // Check for the next level
+//                    if ($index < $card->cardProfits->count() - 1) {
+//                        $nextLevelProfit = $card->cardProfits[$index + 1];
+//                        if ($nextLevelProfit->level == $cardProfit->level + 1) {
+//                            $cardProfitArray['next_level'] = $nextLevelProfit->toArray();
+//                        } else {
+//                            $cardProfitArray['next_level'] = null;
+//                        }
+//                    } else {
+//                        $cardProfitArray['next_level'] = null;
+//                    }
+//
+//                    // Update the current cardProfit in the collection
+//                    $card->cardProfits[$index] = $cardProfitArray;
+//                }
+//            }
+//        }
+//
+//        return $categoryList;
+//    }
+
+
+
 
     public static function findUserByMembership($membershipId)
     {

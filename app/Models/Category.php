@@ -10,6 +10,11 @@ class Category extends Model
 
     protected $hidden = [
     ];
+
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
     protected $appends = [];
 
     protected $guarded = [];
