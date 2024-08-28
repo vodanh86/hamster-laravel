@@ -28,15 +28,15 @@ class BootsController extends AdminController
         $grid = new Grid(new Boots());
 
         $grid->column('id', __('Id'));
-        $grid->column('type', __('Type'));
-        $grid->column('sub_type', __('Sub Type'));
-        $grid->column('name', __('Name'));
-        $grid->column('required_money', __('Required money'));
-        $grid->column('required_short_money', __('Required short money'));
-        $grid->column('image', __('Image'))->image();
-        $grid->column('level', __('Level'));
-        $grid->column('value', __('Value'));
-        $grid->column('order', __('Order'));
+        $grid->column('type', __('Type'))->filter('like')->sortable();
+        $grid->column('sub_type', __('Sub Type'))->filter('like')->sortable();
+        $grid->column('name', __('Name'))->filter('like')->sortable();
+        $grid->column('required_money', __('Required money'))->filter('like')->sortable();
+        $grid->column('required_short_money', __('Required short money'))->filter('like')->sortable();
+        $grid->column('image', __('Image'))->image()->sortable();
+        $grid->column('level', __('Level'))->filter('like');
+        $grid->column('value', __('Value'))->filter('like');
+        $grid->column('order', __('Order'))->filter('like');
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
