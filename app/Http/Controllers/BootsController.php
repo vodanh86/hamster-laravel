@@ -68,7 +68,6 @@ class BootsController extends Controller
 
             $currentUserBoots = UserBoots::findOrFail($currentUserBootsId);
             $nextUserBoots = UserBoots::findOrFail($nextUserBootsId);
-            $currentBoots=Boots::findOrFail($currentUserBoots->boots_id);
             $nextBoots=Boots::findOrFail($nextUserBoots->boots_id);
 
             //FREE OR FEE
@@ -86,10 +85,8 @@ class BootsController extends Controller
                 $increaseValue = $nextBoots->value;
                 if ($subType === ConstantHelper::BOOTS_SUBTYPE_MULTI_TAP) {
                     $user->tap_value = $increaseValue;
-//                    error_log('tap new: ' . $user->tap_value);
                 }
                 if ($subType === ConstantHelper::BOOTS_SUBTYPE_ENERGY_LIMIT) {
-//                    error_log(  $user->energy_limit);
                     $user->energy_limit += $increaseValue;
                 }
 

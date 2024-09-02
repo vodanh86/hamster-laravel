@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Encore\Admin\Traits\Resizable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Card extends Model
 {
+    use Resizable;
     protected $table = 'card';
 
     protected $hidden = [
@@ -27,4 +29,7 @@ class Card extends Model
     protected $appends = [];
 
     protected $guarded = [];
+
 }
+// To access thumbnail
+//$photo->thumbnail('small','photo_column');
