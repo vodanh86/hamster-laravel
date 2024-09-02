@@ -24,4 +24,5 @@ Route::group([
     $router->resource('user-earn',UserEarnController::class);
     $router->resource('boots',BootsController::class);
     $router->resource('user-boots',UserBootsController::class);
+    $router->resource('/config', ASystemConfigController::class);
 });
