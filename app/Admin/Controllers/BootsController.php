@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Boots;
 use App\Models\Earn;
+use App\Models\UserBoots;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -96,6 +97,24 @@ class BootsController extends AdminController
         $form->number('level', __('Level'))->required();
         $form->number('value', __('Value'))->required();
         $form->number('order', __('Order'))->required();
+
+        if (!$form->isEditing()) {
+            //insert form
+            $form->saved(function ($form){
+                $id=$form->model()->id ;
+                $users=(new UtilsQueryHelper())::getAllUsers();
+                if(count($users)!==0) {
+                    foreach ($users as $user) {
+                        $userBoots=new UserBoots();
+                        $userBoots->user_id=$user->id;
+                        $userBoots->boots_id=$id;
+                        $userBoots->is_completed = ConstantHelper::STATUS_IN_ACTIVE;
+
+                        $userBoots->save();
+                    }
+                }
+            });
+        }
         return $form;
     }
 }
