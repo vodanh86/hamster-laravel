@@ -30,7 +30,9 @@ class SkinController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
+        $grid->column('en_name', __('Name(English)'));
         $grid->column('description', __('Description'));
+        $grid->column('en_description', __('Description(English)'));
         $grid->column('image', __('Image'))->image();
         $grid->column('price', __('Price'));
         $grid->column('created_at', __('Created at'));
@@ -52,7 +54,9 @@ class SkinController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
+        $show->field('en_name', __('Name(English)'));
         $show->field('description', __('Description'));
+        $show->field('en_description', __('Description(English)'));
         $show->field('image', __('Image'));
         $show->field('price', __('Price'));
         $show->field('created_at', __('Created at'));
@@ -75,7 +79,9 @@ class SkinController extends AdminController
 
         }
         $form->text('name', __('Name'));
+        $form->text('en_name', __('Name(English)'));
         $form->text('description', __('Description'));
+        $form->text('en_description', __('Description(English)'));
 //        $form->image('image', __('Image'))->move("images/skin");
         $form->image('image', __('Image'))->move("images/skin")->thumbnail([
             'small' => [150, 150],

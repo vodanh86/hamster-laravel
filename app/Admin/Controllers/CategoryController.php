@@ -29,7 +29,9 @@ class CategoryController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
+        $grid->column('en_name', __('Name(English)'));
         $grid->column('description', __('Description'));
+        $grid->column('en_description', __('Description(English)'));
         $grid->column('order', __('Order'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
@@ -50,7 +52,9 @@ class CategoryController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
+        $show->field('en_name', __('Name(English)'));
         $show->field('description', __('Description'));
+        $show->field('en_description', __('Description(English)'));
         $show->field('order', __('Order'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -67,8 +71,10 @@ class CategoryController extends AdminController
     {
         $form = new Form(new Category());
 
-        $form->text('name', __('Name'));
-        $form->text('description', __('Description'));
+        $form->text('name', __('Name'))->required();
+        $form->text('en_name', __('Name(English)'));
+        $form->text('description', __('Description'))->required();
+        $form->text('en_description', __('Description(English)'));
         $form->number('order', __('Order'));
 
         return $form;

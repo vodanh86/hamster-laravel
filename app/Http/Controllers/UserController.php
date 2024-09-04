@@ -244,7 +244,7 @@ class UserController extends Controller
                 //update membership
                 $membership = Membership::findOrFail($user->membership_id);
                 $nextMembership = (new UtilsQueryHelper())::findNextMemebership($membership->level);
-                if (!$nextMembership) {
+                if ($nextMembership) {
                     $nextMembershipMoney = $nextMembership->money;
                     if ($currentHighestScore >= $nextMembershipMoney) {
                         $user->membership_id = $nextMembership->id;

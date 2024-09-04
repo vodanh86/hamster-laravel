@@ -30,9 +30,12 @@ class CardController extends AdminController
         $categoryOptions = (new UtilsQueryHelper())::getAllCategories()->toArray();
         $grid->column('id', __('Id'));
         $grid->column('category.name', __('Category'));
+        $grid->column('category.en_name', __('Category(English)'));
         $grid->column('category_id', __('Cat id'))->filter($categoryOptions);
         $grid->column('name', __('Name'));
+        $grid->column('en_name', __('Name(English)'));
         $grid->column('description', __('Description'));
+        $grid->column('en_description', __('Description(English)'));
         $grid->column('image', __('Image'))->image();
         $grid->column('order', __('Order'))->editable();
         $grid->column('created_at', __('Created at'));
@@ -54,8 +57,10 @@ class CardController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('category.name', __('Category'));
+        $show->field('category.en_name', __('Category(English)'));
         $show->field('name', __('Name'));
         $show->field('description', __('Description'));
+        $show->field('en_description', __('Description(English)'));
         $show->field('image', __('Image'))->image();
         $show->field('order', __('Order'));
         $show->field('created_at', __('Created at'));
@@ -85,8 +90,10 @@ class CardController extends AdminController
             $form->select('category_id', __('Category'))->options($categoryOptions)->default($categoryDefault);
         }
 
-        $form->text('name', __('Name'));
+        $form->text('name', __('Name'))->required();
+        $form->text('en_name', __('Name(English)'));
         $form->text('description', __('Description'));
+        $form->text('en_description', __('Description(English)'));
 //        $form->image('image', __('Image'))->move("images/cards");
 //        $form->image('image', __('Image'))->thumbnail([
 ////            'small' => [30, 30],

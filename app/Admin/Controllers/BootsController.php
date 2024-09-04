@@ -31,6 +31,7 @@ class BootsController extends AdminController
         $grid->column('type', __('Type'))->filter('like')->sortable();
         $grid->column('sub_type', __('Sub Type'))->filter('like')->sortable();
         $grid->column('name', __('Name'))->filter('like')->sortable();
+        $grid->column('en_name', __('Name(English)'))->filter('like')->sortable();
         $grid->column('required_money', __('Required money'))->filter('like')->sortable();
         $grid->column('required_short_money', __('Required short money'))->filter('like')->sortable();
         $grid->column('image', __('Image'))->image()->sortable();
@@ -58,6 +59,7 @@ class BootsController extends AdminController
         $show->field('type', __('Type'));
         $show->field('sub_type', __('Sub Type'));
         $show->field('name', __('Name'));
+        $show->field('en_name', __('Name(English)'));
         $show->field('required_money', __('Required money'));
         $show->field('required_short_money', __('Required short money'));
         $show->field('image', __('Image'))->image();
@@ -86,7 +88,8 @@ class BootsController extends AdminController
 
         $form->radio('type', __('Type'))->options([1 => 'Fee', 0 => 'Free'])->required();
         $form->radio('sub_type', __('Sub Type'))->options([0 => 'Energy', 1 => 'Turbo', 2 => 'Multitap', 3 => 'Energy limit']);
-        $form->text('name', __('Name'));
+        $form->text('name', __('Name'))->required();
+        $form->text('en_name', __('Name(English)'));
         $form->number('required_money', __('Required money'))->required();
         $form->text('required_short_money', __('Required short money'))->required();
         $form->image('image', __('Image'))->move("images/boosts");

@@ -28,6 +28,7 @@ class MembershipController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
+        $grid->column('en_name', __('Name(English)'));
         $grid->column('image', __('Image'))->image();
         $grid->column('money', __('Money'));
         $grid->column('short_money', __('Short money'));
@@ -50,6 +51,7 @@ class MembershipController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
+        $show->field('en_name', __('Name(English)'));
         $show->image('image', __('Image'));
         $show->field('money', __('Money'));
         $show->field('short_money', __('Short money'));
@@ -70,6 +72,7 @@ class MembershipController extends AdminController
         $form = new Form(new Membership());
 
         $form->text('name', __('Name'));
+        $form->text('en_name', __('Name(English)'));
         $form->image('image', __('Image'))->move("images/membership");
         $form->number('money', __('Money'));
         $form->text('short_money', __('Short money'));

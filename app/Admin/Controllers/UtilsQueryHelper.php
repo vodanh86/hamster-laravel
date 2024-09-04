@@ -100,7 +100,7 @@ class UtilsQueryHelper
         $data = DB::table('user_earn as ue')
             ->join('earn as ea', 'ea.id', '=', 'ue.earn_id')
             ->where('ue.user_id', '=', $userId)
-            ->select('ue.id', 'ue.is_completed', 'ea.id as earn_id', 'ea.name', 'ea.type', 'ea.description', 'ea.link', 'ea.image', 'ea.reward', 'ea.order')
+            ->select('ue.id', 'ue.is_completed', 'ea.id as earn_id', 'ea.name','ea.en_name', 'ea.type', 'ea.description', 'ea.en_description', 'ea.link', 'ea.image', 'ea.reward', 'ea.order')
             ->orderBy('ea.type', 'asc')
             ->orderBy('ea.order', 'asc')
             ->get();
@@ -113,7 +113,9 @@ class UtilsQueryHelper
                         'user_earn_id' => $item->id,
                         'is_completed' => $item->is_completed,
                         'name' => $item->name,
+                        'en_name' => $item->en_name,
                         'description' => $item->description,
+                        'en_description' => $item->en_description,
                         'link' => $item->link,
                         'image' => $item->image,
                         'reward' => $item->reward,
@@ -129,7 +131,7 @@ class UtilsQueryHelper
         $data = DB::table('user_boots as ue')
             ->join('boots as ea', 'ea.id', '=', 'ue.boots_id')
             ->where('ue.user_id', '=', $userId)
-            ->select('ue.id', 'ue.is_completed', 'ea.id as boots_id', 'ea.name', 'ea.required_money', 'ea.required_short_money', 'ea.type', 'ea.sub_type', 'ea.level', 'ea.image', 'ea.value', 'ea.order')
+            ->select('ue.id', 'ue.is_completed', 'ea.id as boots_id', 'ea.name', 'ea.en_name', 'ea.required_money', 'ea.required_short_money', 'ea.type', 'ea.sub_type', 'ea.level', 'ea.image', 'ea.value', 'ea.order')
             ->orderBy('ea.type', 'asc')
             ->orderBy('ea.sub_type', 'asc')
             ->orderBy('ea.order', 'asc')
@@ -146,6 +148,7 @@ class UtilsQueryHelper
                                 'user_boots_id' => $item->id,
                                 'boots_id' => $item->boots_id,
                                 'name' => $item->name,
+                                'en_name' => $item->en_name,
                                 'required_money' => $item->required_money,
                                 'required_short_money' => $item->required_short_money,
                                 'is_completed' => $item->is_completed,
@@ -278,6 +281,7 @@ class UtilsQueryHelper
 
                         $requiredCardProfitArray = $requiredCardProfit->toArray();
                         $requiredCardProfitArray['card_name'] = $requiredCardProfit->card->name;
+                        $requiredCardProfitArray['card_name_en'] = $requiredCardProfit->card->en_name;
                         $requiredCardProfitArray['is_bought'] = $userCardBought ? 1 : 0;
                         unset($requiredCardProfitArray['card']);
 
@@ -359,7 +363,7 @@ class UtilsQueryHelper
         return DB::table('memberships as me')
             ->join('users as us', 'us.membership_id', '=', 'me.id')
             ->where('us.id', '=', $userId)
-            ->select('us.membership_id', 'me.name', 'me.image', 'me.money', 'me.level', 'me.short_money')
+            ->select('us.membership_id', 'me.name', 'me.en_name', 'me.image', 'me.money', 'me.level', 'me.short_money')
             ->get();
     }
 
