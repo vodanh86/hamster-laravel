@@ -34,9 +34,9 @@ class EarnController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('type', __('Type'));
         $grid->column('name', __('Name'));
-        $grid->column('en_name', __('Name'));
+        $grid->column('en_name', __('Name(English)'));
         $grid->column('description', __('Description'));
-        $grid->column('en_description', __('Description'));
+        $grid->column('en_description', __('Description(English)'));
         $grid->column('link', __('Link'));
         $grid->column('reward', __('Reward'));
         $grid->column('image', __('Image'))->image();
@@ -63,7 +63,7 @@ class EarnController extends AdminController
         $show->field('name', __('Name'));
         $show->field('en_name', __('Name(English)'));
         $show->field('description', __('Description'));
-        $show->field('en_description', __('Description'));
+        $show->field('en_description', __('Description(English)'));
         $show->field('link', __('Link'));
         $show->field('reward', __('Reward'));
         $show->field('image', __('Image'))->image();
