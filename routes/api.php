@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EarnController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserCardController;
+use App\Http\Controllers\HomeScreenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,9 @@ Route::post('memberships/get-by-user', [MembershipController::class, 'getByUser'
 //skins
 Route::get('skins', [SkinController::class, 'index']);
 Route::post('user-skin/buy-skin', [SkinController::class, 'buySkin']);
+
+//home screens
+Route::get('home-screens', [HomeScreenController::class, 'index']);
 
 //profit per hour
 Route::get('profit-per-hours', [ProfitPerHourController::class, 'index']);
