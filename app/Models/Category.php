@@ -18,4 +18,8 @@ class Category extends Model
     protected $appends = [];
 
     protected $guarded = [];
+
+    protected $casts = [
+        'name' =>'json',
+    ];
 }

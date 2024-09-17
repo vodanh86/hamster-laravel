@@ -70,8 +70,10 @@ class CategoryController extends AdminController
     protected function form()
     {
         $form = new Form(new Category());
-
-        $form->text('name', __('Name'))->required();
+        $form->embeds('name', function ($form) {
+            $form->text('en')->rules('required');
+            $form->text('vi')->rules('required');
+        });
         $form->text('en_name', __('Name(English)'));
         $form->text('description', __('Description'))->required();
         $form->text('en_description', __('Description(English)'));
