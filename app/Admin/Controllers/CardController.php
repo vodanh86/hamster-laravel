@@ -28,7 +28,7 @@ class CardController extends AdminController
     {
         $grid = new Grid(new Card());
         $grid->column('id', __('Id'));
-        $grid->column('category.en_name', __('Category'));
+        $grid->column('category.id', __('Category id'))->filter();
         $grid->column('category.en_name', __('Category(English)'));
         $grid->column('name', __('Name'));
         $grid->column('en_name', __('Name(English)'));
